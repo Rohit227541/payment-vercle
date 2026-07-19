@@ -1,0 +1,9 @@
+{
+  "merchantAutoApprove": false,
+  "twoFactorRequirement": true,
+  "maintenanceMode": false,
+  "transactionLimitPerDay": "₹50,00,000",
+  "defaultPayoutCycle": "T+2 Days",
+  "primaryDatabaseHost": "db-production-mysql-replica.internal",
+  "redisCacheExpiry": "86400 seconds (24 Hours)"
+}

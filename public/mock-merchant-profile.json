@@ -1,0 +1,21 @@
+{
+  "merchantId": "MER000284",
+  "merchantName": "ShopKart Solutions India",
+  "email": "payments@shopkart.in",
+  "phone": "+91 98765 43210",
+  "kycStatus": "APPROVED",
+  "businessType": "Private Limited Company",
+  "panNumber": "AAECS1284F",
+  "address": {
+    "line1": "Suite 402, 4th Floor, Sector 62, Noida",
+    "city": "Noida",
+    "state": "Uttar Pradesh",
+    "pincode": "201301"
+  },
+  "bankDetails": {
+    "accountName": "ShopKart Solutions India Private Limited",
+    "bankName": "HDFC Bank Ltd",
+    "accountNumber": "50200048294021",
+    "ifsc": "HDFC0000284"
+  }
+}

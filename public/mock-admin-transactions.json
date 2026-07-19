@@ -1,0 +1,53 @@
+[
+  {
+    "transactionId": "TXN-94820",
+    "merchantName": "ShopKart Solutions",
+    "merchantCode": "MER000284",
+    "orderId": "ORD-55410",
+    "paymentId": "pay_M3kq9X",
+    "customerName": "Aarav Mehta",
+    "customerEmail": "aarav@shopkart.in",
+    "customerPhone": "+91 98123 45678",
+    "amount": "2,499",
+    "currency": "₹",
+    "paymentMethod": "UPI",
+    "transactionStatus": "SUCCESS",
+    "gatewayResponse": "Txn Success - Authorized",
+    "createdDate": "18 Jul, 10:24",
+    "settlementDate": "18 Jul, 18:00"
+  },
+  {
+    "transactionId": "TXN-94821",
+    "merchantName": "ShopKart Solutions",
+    "merchantCode": "MER000284",
+    "orderId": "ORD-55411",
+    "paymentId": "pay_M3kp2L",
+    "customerName": "Sara Williams",
+    "customerEmail": "sara@saasify.co",
+    "customerPhone": "+91 95432 10987",
+    "amount": "8,990",
+    "currency": "₹",
+    "paymentMethod": "Visa",
+    "transactionStatus": "SUCCESS",
+    "gatewayResponse": "Txn Success - Captured",
+    "createdDate": "18 Jul, 09:51",
+    "settlementDate": "18 Jul, 18:00"
+  },
+  {
+    "transactionId": "TXN-94823",
+    "merchantName": "NovaPay India",
+    "merchantCode": "MER000280",
+    "orderId": "ORD-77111",
+    "paymentId": "pay_M3kl4R",
+    "customerName": "Nova Admin User",
+    "customerEmail": "nova.payout@novapay.com",
+    "customerPhone": "+91 77777 77777",
+    "amount": "3,200",
+    "currency": "₹",
+    "paymentMethod": "RuPay",
+    "transactionStatus": "SUCCESS",
+    "gatewayResponse": "Txn Success - Authorized",
+    "createdDate": "17 Jul, 18:40",
+    "settlementDate": "18 Jul, 06:00"
+  }
+]

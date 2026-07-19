@@ -1,0 +1,35 @@
+[
+  {
+    "id": "REP-2026-07-18",
+    "reportType": "Daily Report",
+    "merchantName": "Global Platform",
+    "period": "18 Jul, 2026",
+    "totalVolume": "₹42,85,900",
+    "transactionsCount": 842,
+    "platformFees": "₹85,718.00",
+    "taxCollected": "₹15,429.24",
+    "netPayout": "₹41,84,752.76"
+  },
+  {
+    "id": "REP-2026-07-M",
+    "reportType": "Monthly Report",
+    "merchantName": "Global Platform",
+    "period": "July 2026",
+    "totalVolume": "₹12.82 Cr",
+    "transactionsCount": 18542,
+    "platformFees": "₹25.64L",
+    "taxCollected": "₹4.61L",
+    "netPayout": "₹12.51 Cr"
+  },
+  {
+    "id": "REP-MER-00284",
+    "reportType": "Merchant Report",
+    "merchantName": "ShopKart Solutions",
+    "period": "July 2026",
+    "totalVolume": "₹24,82,940",
+    "transactionsCount": 1284,
+    "platformFees": "₹49,658.80",
+    "taxCollected": "₹8,938.58",
+    "netPayout": "₹24,24,342.62"
+  }
+]

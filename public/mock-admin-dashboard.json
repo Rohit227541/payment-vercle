@@ -1,0 +1,91 @@
+{
+  "stats": {
+    "totalTransactions": 185420,
+    "successfulTransactions": 178420,
+    "failedTransactions": 5084,
+    "pendingTransactions": 1916,
+    "refundCount": 850,
+    "chargebacks": 130,
+    "todayRevenue": "₹42,85,900",
+    "monthlyRevenue": "₹12.82 Cr",
+    "availableBalance": "₹64.20L",
+    "settledAmount": "₹12.18 Cr"
+  },
+  "pendingMerchants": [
+    {
+      "merchantId": "MER000295",
+      "businessName": "E-Saasify Technologies",
+      "merchantName": "Vipul Verma",
+      "email": "onboarding@esaasify.com",
+      "phone": "+91 91234 56789",
+      "website": "https://esaasify.com",
+      "businessType": "Partnership Firm",
+      "kycStatus": "PENDING",
+      "approvalStatus": "PENDING",
+      "apiKey": "pk_live_f12e848",
+      "secretKey": "sk_live_293a108",
+      "accountStatus": "PENDING",
+      "createdDate": "18 Jul, 14:24"
+    },
+    {
+      "merchantId": "MER000294",
+      "businessName": "QuickShip Logistics",
+      "merchantName": "Ramesh Kumar",
+      "email": "accounts@quickship.io",
+      "phone": "+91 88888 88888",
+      "website": "https://quickship.io",
+      "businessType": "Proprietorship",
+      "kycStatus": "PENDING",
+      "approvalStatus": "PENDING",
+      "apiKey": "pk_live_d840ea8",
+      "secretKey": "sk_live_9e3a8fa",
+      "accountStatus": "PENDING",
+      "createdDate": "18 Jul, 11:15"
+    },
+    {
+      "merchantId": "MER000294",
+      "businessName": "QuickShip Logistics",
+      "merchantName": "Ramesh Kumar",
+      "email": "accounts@quickship.io",
+      "phone": "+91 88888 88888",
+      "website": "https://quickship.io",
+      "businessType": "Proprietorship",
+      "kycStatus": "PENDING",
+      "approvalStatus": "PENDING",
+      "apiKey": "pk_live_d840ea8",
+      "secretKey": "sk_live_9e3a8fa",
+      "accountStatus": "PENDING",
+      "createdDate": "18 Jul, 11:15"
+    },
+    {
+      "merchantId": "MER000294",
+      "businessName": "QuickShip Logistics",
+      "merchantName": "Ramesh Kumar",
+      "email": "accounts@quickship.io",
+      "phone": "+91 88888 88888",
+      "website": "https://quickship.io",
+      "businessType": "Proprietorship",
+      "kycStatus": "PENDING",
+      "approvalStatus": "PENDING",
+      "apiKey": "pk_live_d840ea8",
+      "secretKey": "sk_live_9e3a8fa",
+      "accountStatus": "PENDING",
+      "createdDate": "18 Jul, 11:15"
+    },
+    {
+      "merchantId": "MER000294",
+      "businessName": "QuickShip Logistics",
+      "merchantName": "Ramesh Kumar",
+      "email": "accounts@quickship.io",
+      "phone": "+91 88888 88888",
+      "website": "https://quickship.io",
+      "businessType": "Proprietorship",
+      "kycStatus": "PENDING",
+      "approvalStatus": "PENDING",
+      "apiKey": "pk_live_d840ea8",
+      "secretKey": "sk_live_9e3a8fa",
+      "accountStatus": "PENDING",
+      "createdDate": "18 Jul, 11:15"
+    }
+  ]
+}

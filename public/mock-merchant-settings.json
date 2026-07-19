@@ -1,0 +1,8 @@
+{
+  "publicKey": "pk_live_51Nv2j849208a8f108f9208f840ea892c90a182",
+  "webhookUrl": "https://api.shopkart.in/v1/webhooks/payflow",
+  "webhookSecret": "whsec_83a8f108f9208f840ea892c90a1829e",
+  "emailAlerts": true,
+  "payoutAlerts": true,
+  "smsAlerts": false
+}

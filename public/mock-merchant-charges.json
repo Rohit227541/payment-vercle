@@ -1,0 +1,41 @@
+[
+  {
+    "merchant_id": "MER000284",
+    "payment_method": "UPI (Intrabank & Autopay)",
+    "fee_type": "PERCENTAGE",
+    "fixed_fee": "₹0.00",
+    "percentage_fee": "0.00%",
+    "min_fee": "₹0.00",
+    "max_fee": "₹0.00",
+    "gst_percentage": "0.00%",
+    "effective_from": "01 Jan, 2025",
+    "effective_to": "31 Dec, 2026",
+    "status": "ACTIVE"
+  },
+  {
+    "merchant_id": "MER000284",
+    "payment_method": "Credit Cards (Domestic)",
+    "fee_type": "PERCENTAGE_AND_FIXED",
+    "fixed_fee": "₹2.00",
+    "percentage_fee": "1.90%",
+    "min_fee": "₹2.00",
+    "max_fee": "₹150.00",
+    "gst_percentage": "18.00%",
+    "effective_from": "01 Jan, 2025",
+    "effective_to": "31 Dec, 2026",
+    "status": "ACTIVE"
+  },
+  {
+    "merchant_id": "MER000284",
+    "payment_method": "Net Banking",
+    "fee_type": "FIXED",
+    "fixed_fee": "₹12.00",
+    "percentage_fee": "0.00%",
+    "min_fee": "₹12.00",
+    "max_fee": "₹12.00",
+    "gst_percentage": "18.00%",
+    "effective_from": "01 Jan, 2025",
+    "effective_to": "31 Dec, 2026",
+    "status": "ACTIVE"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "merchantId": "MER000284",
+    "businessName": "ShopKart Solutions India",
+    "merchantName": "Aarav Mehta",
+    "email": "payments@shopkart.in",
+    "phone": "+91 98765 43210",
+    "website": "https://shopkart.in",
+    "businessType": "Private Limited Company",
+    "kycStatus": "APPROVED",
+    "approvalStatus": "APPROVED",
+    "apiKey": "pk_live_51Nv2j849208a8f1",
+    "secretKey": "sk_live_83a8f108f9208f8",
+    "accountStatus": "ACTIVE",
+    "createdDate": "12 Jun, 2025"
+  },
+  {
+    "merchantId": "MER000295",
+    "businessName": "E-Saasify Technologies",
+    "merchantName": "Vipul Verma",
+    "email": "onboarding@esaasify.com",
+    "phone": "+91 91234 56789",
+    "website": "https://esaasify.com",
+    "businessType": "Partnership Firm",
+    "kycStatus": "PENDING",
+    "approvalStatus": "PENDING",
+    "apiKey": "pk_live_f12e848",
+    "secretKey": "sk_live_293a108",
+    "accountStatus": "PENDING",
+    "createdDate": "18 Jul, 2026"
+  },
+  {
+    "merchantId": "MER000294",
+    "businessName": "QuickShip Logistics",
+    "merchantName": "Ramesh Kumar",
+    "email": "accounts@quickship.io",
+    "phone": "+91 88888 88888",
+    "website": "https://quickship.io",
+    "businessType": "Proprietorship",
+    "kycStatus": "PENDING",
+    "approvalStatus": "PENDING",
+    "apiKey": "pk_live_d840ea8",
+    "secretKey": "sk_live_9e3a8fa",
+    "accountStatus": "PENDING",
+    "createdDate": "18 Jul, 2026"
+  },
+  {
+    "merchantId": "MER000280",
+    "businessName": "NovaPay India",
+    "merchantName": "Priya Nair",
+    "email": "finance@novapay.com",
+    "phone": "+91 77777 77777",
+    "website": "https://novapay.com",
+    "businessType": "Partnership Firm",
+    "kycStatus": "APPROVED",
+    "approvalStatus": "APPROVED",
+    "apiKey": "pk_live_e9208f8",
+    "secretKey": "sk_live_0ea892c",
+    "accountStatus": "ACTIVE",
+    "createdDate": "05 May, 2025"
+  }
+]

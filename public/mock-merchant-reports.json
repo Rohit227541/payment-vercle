@@ -1,0 +1,32 @@
+[
+  {
+    "id": "REP-2026-07-18",
+    "reportType": "Daily Report",
+    "period": "18 Jul, 2026",
+    "totalVolume": "₹82,490",
+    "transactionsCount": 22,
+    "platformFees": "₹1,649.80",
+    "taxCollected": "₹296.96",
+    "netPayout": "₹80,543.24"
+  },
+  {
+    "id": "REP-2026-07-17",
+    "reportType": "Daily Report",
+    "period": "17 Jul, 2026",
+    "totalVolume": "₹94,120",
+    "transactionsCount": 28,
+    "platformFees": "₹1,882.40",
+    "taxCollected": "₹338.83",
+    "netPayout": "₹91,898.77"
+  },
+  {
+    "id": "REP-2026-07-M",
+    "reportType": "Monthly Report",
+    "period": "July 2026",
+    "totalVolume": "₹24,82,940",
+    "transactionsCount": 1284,
+    "platformFees": "₹49,658.80",
+    "taxCollected": "₹8,938.58",
+    "netPayout": "₹24,24,342.62"
+  }
+]
