@@ -11,6 +11,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const location = useLocation();
+  const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -71,8 +72,16 @@ export default function Navbar() {
           >
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
-          <Link to="/login" className="btn-ghost text-base px-4 py-2">Merchant Login</Link>
-          <Button to="/signup" className="text-base px-5 py-2.5">Get Started</Button>
+          {isLoggedIn ? (
+            <Button to="/dashboard" className="text-base px-5 py-2.5">
+              Go to Dashboard
+            </Button>
+          ) : (
+            <>
+              <Link to="/login" className="btn-ghost text-base px-4 py-2">Merchant Login</Link>
+              <Button to="/signup" className="text-base px-5 py-2.5">Get Started</Button>
+            </>
+          )}
         </div>
 
         {/* Mobile menu buttons */}
@@ -123,8 +132,14 @@ export default function Navbar() {
                 ))}
               </ul>
               <div className="mt-4 grid gap-2">
-                <Button to="/login" variant="secondary" className="w-full text-base py-3">Merchant Login</Button>
-                <Button to="/signup" className="w-full text-base py-3">Create Merchant Account</Button>
+                {isLoggedIn ? (
+                  <Button to="/dashboard" className="w-full text-base py-3">Go to Dashboard</Button>
+                ) : (
+                  <>
+                    <Button to="/login" variant="secondary" className="w-full text-base py-3">Merchant Login</Button>
+                    <Button to="/signup" className="w-full text-base py-3">Create Merchant Account</Button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

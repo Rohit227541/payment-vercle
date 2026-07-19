@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -31,6 +31,13 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<{ adminName: string; role: string } | null>(null);
 
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+
+  if (!token || role !== 'admin') {
+    return <Navigate to="/login" replace />;
+  }
+
   const loadAdminHeader = async () => {
     try {
       const response = await fetch(API_URL);
@@ -47,7 +54,11 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     localStorage.removeItem('admin');
+    localStorage.removeItem('merchant');
+    localStorage.removeItem('merchant_name');
+    localStorage.removeItem('merchant_email');
     navigate('/login');
   };
 

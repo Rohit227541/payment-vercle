@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useMerchant } from '../context/MerchantContext';
 import {
   LayoutDashboard,
@@ -30,8 +30,17 @@ export default function MerchantLayout() {
   const navigate = useNavigate();
   const { name, email, logout } = useMerchant();
 
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+
+  if (!token || (role !== 'merchant' && role !== 'client')) {
+    return <Navigate to="/login" replace />;
+  }
+
   const handleLogout = () => {
     logout();
+    localStorage.removeItem('role');
+    localStorage.removeItem('admin');
     navigate('/login');
   };
 

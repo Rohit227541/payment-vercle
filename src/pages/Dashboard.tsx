@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import {
   LayoutDashboard, CreditCard, Repeat, Wallet, RefreshCw, FileText, Settings, LogOut,
   TrendingUp, ArrowUpRight, ArrowDownRight, Search, Bell, Menu, X, CheckCircle2, Globe,
@@ -33,7 +33,26 @@ const statusCls: Record<string, string> = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const role = localStorage.getItem('role') || 'client';
+  if (role === 'admin') {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+  if (role === 'merchant') {
+    return <Navigate to="/merchant/dashboard" replace />;
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('merchant_name');
+    localStorage.removeItem('merchant_email');
+    localStorage.removeItem('merchant');
+    localStorage.removeItem('admin');
+    navigate('/login');
+  };
 
   return (
     <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950">
@@ -57,9 +76,12 @@ export default function Dashboard() {
           ))}
         </nav>
         <div className="absolute bottom-0 w-full border-t border-ink-200/60 dark:border-ink-800/60 p-3">
-          <Link to="/login" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800/60">
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 dark:text-ink-300 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition"
+          >
             <LogOut className="h-4 w-4" /> Logout
-          </Link>
+          </button>
         </div>
       </aside>
 
