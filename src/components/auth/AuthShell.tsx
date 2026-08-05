@@ -40,7 +40,7 @@ export default function AuthShell({
             </svg>
           </span>
           <span className="font-display text-lg font-bold tracking-tight">
-            PayFlow<span className="text-accent-300">.</span>
+            TrustGates<span className="text-accent-300">.</span>
           </span>
         </Link>
 
@@ -121,7 +121,7 @@ export default function AuthShell({
               <CreditCard className="h-4 w-4 text-accent-300" /> RuPay, Visa, UPI split ready
             </li>
           </ul>
-          <p className="text-[10px] text-white/40">© {new Date().getFullYear()} PayFlow Gateway Inc.</p>
+          <p className="text-[10px] text-white/40">© {new Date().getFullYear()} TrustGates Gateway Inc.</p>
         </div>
       </div>
 

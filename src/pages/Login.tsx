@@ -25,12 +25,12 @@ export default function Login() {
       localStorage.setItem("admin", JSON.stringify({
         adminId: "ADM-001",
         adminName: "Aditya Sharma",
-        email: "aditya.sharma@payflow.io",
+        email: "aditya.sharma@TrustGates.io",
         role: "Super Administrator"
       }));
       localStorage.setItem("merchant", JSON.stringify({
         name: "Aditya Sharma",
-        email: "admin@payflow.io"
+        email: "admin@TrustGates.io"
       }));
       navigate("/admin/dashboard");
     } else if (role === 'merchant') {
@@ -49,12 +49,12 @@ export default function Login() {
       localStorage.setItem("token", "demo-client-token");
       localStorage.setItem("role", "client");
       localStorage.setItem("merchant_name", "Aarav Mehta");
-      localStorage.setItem("merchant_email", "client@payflow.io");
+      localStorage.setItem("merchant_email", "client@TrustGates.io");
       localStorage.setItem("is_email_verified", "true");
       localStorage.setItem("kyc_status", "approved");
       localStorage.setItem("merchant", JSON.stringify({
         name: "Aarav Mehta",
-        email: "client@payflow.io"
+        email: "client@TrustGates.io"
       }));
       navigate("/dashboard");
     }
@@ -75,12 +75,12 @@ export default function Login() {
     clearError();
     setLocalError(null);
 
-    const isDemoEmail = ['admin@payflow.io', 'merchant@payflow.io', 'client@payflow.io'].includes(data.email.toLowerCase());
+    const isDemoEmail = ['admin@TrustGates.io', 'merchant@TrustGates.io', 'client@TrustGates.io'].includes(data.email.toLowerCase());
 
     if (!API_BASE_URL || isDemoEmail) {
       const emailLower = data.email.toLowerCase();
 
-      if (emailLower === 'admin@payflow.io') {
+      if (emailLower === 'admin@TrustGates.io') {
         if (data.password !== 'admin123') {
           setLocalError("Invalid password for Admin. Please use 'admin123'.");
           return;
@@ -89,7 +89,7 @@ export default function Login() {
         return;
       }
 
-      if (emailLower === 'merchant@payflow.io') {
+      if (emailLower === 'merchant@TrustGates.io') {
         if (data.password !== 'merchant123') {
           setLocalError("Invalid password for Merchant. Please use 'merchant123'.");
           return;
@@ -98,7 +98,7 @@ export default function Login() {
         return;
       }
 
-      if (emailLower === 'client@payflow.io') {
+      if (emailLower === 'client@TrustGates.io') {
         if (data.password !== 'client123') {
           setLocalError("Invalid password for Client. Please use 'client123'.");
           return;
@@ -167,10 +167,10 @@ export default function Login() {
   return (
     <AuthShell
       title="Merchant Login"
-      subtitle="Welcome back. Sign in to your PayFlow dashboard."
+      subtitle="Welcome back. Sign in to your TrustGates dashboard."
       footer={
         <>
-          New to PayFlow?{' '}
+          New to TrustGates?{' '}
           <Link to="/signup" className="font-semibold text-brand-600 dark:text-brand-300 hover:underline">
             Register now
           </Link>
@@ -292,7 +292,7 @@ export default function Login() {
             {
               role: 'admin' as const,
               title: 'Administrator',
-              email: 'admin@payflow.io',
+              email: 'admin@TrustGates.io',
               pass: 'admin123',
               badge: 'System Admin',
               badgeCls: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
@@ -302,7 +302,7 @@ export default function Login() {
             {
               role: 'merchant' as const,
               title: 'Merchant',
-              email: 'merchant@payflow.io',
+              email: 'merchant@TrustGates.io',
               pass: 'merchant123',
               badge: 'Store Manager',
               badgeCls: 'bg-brand-500/10 text-brand-600 dark:text-brand-450 border-brand-500/20',

@@ -12,7 +12,7 @@ export default function Testimonials() {
         <SectionHeading
           eyebrow="Testimonials"
           title={<>Loved by <span className="gradient-text">modern businesses</span></>}
-          subtitle="Join 50,000+ merchants who trust PayFlow to power their payments."
+          subtitle="Join 50,000+ merchants who trust TrustGates to power their payments."
         />
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (

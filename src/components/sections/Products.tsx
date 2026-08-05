@@ -11,7 +11,7 @@ export default function Products() {
         <SectionHeading
           eyebrow="Products"
           title={<>One platform, <span className="gradient-text">every product</span></>}
-          subtitle="From checkout to settlement, PayFlow gives you a unified suite of payment products."
+          subtitle="From checkout to settlement, TrustGates gives you a unified suite of payment products."
         />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((p, i) => (

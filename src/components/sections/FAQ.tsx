@@ -13,7 +13,7 @@ export default function FAQ() {
         <SectionHeading
           eyebrow="FAQ"
           title={<>Frequently asked <span className="gradient-text">questions</span></>}
-          subtitle="Everything you need to know about PayFlow. Can't find an answer? Reach out to our team."
+          subtitle="Everything you need to know about TrustGates. Can't find an answer? Reach out to our team."
         />
         <div className="mx-auto mt-12 max-w-3xl space-y-3">
           {faqs.map((f, i) => {

@@ -43,12 +43,12 @@ import AdminReports from './pages/admin/Reports';
 import AdminCharges from './pages/admin/Charges';
 import AdminSettings from './pages/admin/Settings';
 const termsSections = [
-  { heading: '1. Acceptance of Terms', body: 'By accessing or using PayFlow Gateway services, you agree to be bound by these Terms of Service. If you do not agree, you may not use our services.' },
+  { heading: '1. Acceptance of Terms', body: 'By accessing or using TrustGates Gateway services, you agree to be bound by these Terms of Service. If you do not agree, you may not use our services.' },
   { heading: '2. Merchant Responsibilities', body: 'You are responsible for the accuracy of the information provided during onboarding and for complying with all applicable laws and regulations in your jurisdiction.' },
-  { heading: '3. Fees and Billing', body: 'PayFlow charges transaction fees as published on our pricing page. Fees are deducted from settlements before they are transferred to your bank account.' },
-  { heading: '4. Acceptable Use', body: 'You may not use PayFlow for illegal activities, fraudulent transactions, or to process payments for prohibited goods and services as defined in our acceptable use policy.' },
+  { heading: '3. Fees and Billing', body: 'TrustGates charges transaction fees as published on our pricing page. Fees are deducted from settlements before they are transferred to your bank account.' },
+  { heading: '4. Acceptable Use', body: 'You may not use TrustGates for illegal activities, fraudulent transactions, or to process payments for prohibited goods and services as defined in our acceptable use policy.' },
   { heading: '5. Account Suspension', body: 'We reserve the right to suspend or terminate accounts that violate these terms, exhibit suspicious activity, or pose a risk to the platform.' },
-  { heading: '6. Limitation of Liability', body: 'PayFlow shall not be liable for indirect, incidental, or consequential damages arising from the use of our services, except as required by law.' },
+  { heading: '6. Limitation of Liability', body: 'TrustGates shall not be liable for indirect, incidental, or consequential damages arising from the use of our services, except as required by law.' },
   { heading: '7. Changes to Terms', body: 'We may update these terms from time to time. Continued use of the services after changes constitutes acceptance of the revised terms.' },
 ];
 
@@ -59,13 +59,13 @@ const privacySections = [
   { heading: '4. Data Sharing', body: 'We share data only with payment networks, issuing banks, and regulators as necessary to process transactions and comply with the law. We never sell your data.' },
   { heading: '5. Your Rights', body: 'You have the right to access, correct, or delete your personal data, and to export your data in a portable format, subject to applicable law.' },
   { heading: '6. Cookies', body: 'We use cookies to operate and improve our website. See our Cookie Policy for details on the cookies we use and how to manage them.' },
-  { heading: '7. Contact', body: 'For privacy enquiries, contact our Data Protection Officer at privacy@payflow.io.' },
+  { heading: '7. Contact', body: 'For privacy enquiries, contact our Data Protection Officer at privacy@TrustGates.io.' },
 ];
 
 const refundSections = [
   { heading: '1. Refund Eligibility', body: 'Merchants can issue full or partial refunds for captured transactions within 180 days of the original payment. Refunds are subject to the original payment method.' },
   { heading: '2. Refund Processing Time', body: 'Refunds typically appear on the customer\'s statement within 5–10 business days, depending on the issuing bank and payment method.' },
-  { heading: '3. Refund Fees', body: 'PayFlow does not charge a fee for processing refunds. However, the original transaction fee is non-refundable unless otherwise stated in your agreement.' },
+  { heading: '3. Refund Fees', body: 'TrustGates does not charge a fee for processing refunds. However, the original transaction fee is non-refundable unless otherwise stated in your agreement.' },
   { heading: '4. Chargebacks', body: 'Customers may initiate chargebacks directly with their bank. Merchants can submit evidence to dispute chargebacks through the dashboard.' },
   { heading: '5. Settlement Adjustments', body: 'Refunds are deducted from your upcoming settlement. If the settlement balance is insufficient, the amount is recovered from your next settlement.' },
 ];

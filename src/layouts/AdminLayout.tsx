@@ -86,7 +86,7 @@ export default function AdminLayout() {
                 <circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" />
               </svg>
             </span>
-            <span className="font-display text-base font-bold text-ink-900 dark:text-white">PayFlow <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold px-1 py-0.5 rounded bg-purple-500/10 ml-1">Admin</span></span>
+            <span className="font-display text-base font-bold text-ink-900 dark:text-white">TrustGates <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold px-1 py-0.5 rounded bg-purple-500/10 ml-1">Admin</span></span>
           </Link>
           <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500 p-1 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-lg">
             <X className="h-5 w-5" />

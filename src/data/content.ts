@@ -100,7 +100,7 @@ export const stats = [
 ];
 
 export const testimonials = [
-  { name: 'Aarav Mehta', role: 'CEO, ShopKart', rating: 5, quote: 'PayFlow pushed our checkout success rate to 99.2%. Settlements land in minutes, and the dashboard is a joy to use.' },
+  { name: 'Aarav Mehta', role: 'CEO, ShopKart', rating: 5, quote: 'TrustGates pushed our checkout success rate to 99.2%. Settlements land in minutes, and the dashboard is a joy to use.' },
   { name: 'Sara Williams', role: 'CFO, SaaSify', rating: 5, quote: 'Subscriptions and dunning just work. We cut involuntary churn by 23% in the first quarter after switching.' },
   { name: 'Rohan Kapoor', role: 'CTO, EduPay', rating: 5, quote: 'The API is clean, the docs are excellent, and webhooks are reliable. Our integration took two days, not two weeks.' },
   { name: 'Lena Fischer', role: 'Head of Payments, GlobeMart', rating: 5, quote: 'Smart routing alone paid for itself. International acceptance across 40 countries with one contract.' },
@@ -113,7 +113,7 @@ export const faqs = [
   { q: 'What payment methods are supported?', a: 'UPI, all major credit and debit cards (Visa, MasterCard, RuPay, Amex), 50+ net banking options, wallets, EMI, BNPL, and international cards across 150+ countries.' },
   { q: 'How fast are settlements?', a: 'Standard settlements are T+1. With Instant Settlement, funds reach your bank account within minutes of a successful transaction.' },
   { q: 'Do you charge a setup fee?', a: 'No. There are no setup fees, no annual maintenance fees, and no minimum commitments on the Starter and Business plans.' },
-  { q: 'Is PayFlow PCI DSS compliant?', a: 'Yes. We are PCI DSS Level 1 certified, the highest level of compliance. All card data is tokenized and vaulted — it never touches your servers.' },
+  { q: 'Is TrustGates PCI DSS compliant?', a: 'Yes. We are PCI DSS Level 1 certified, the highest level of compliance. All card data is tokenized and vaulted — it never touches your servers.' },
   { q: 'Can I accept international payments?', a: 'Yes. You can accept payments in 100+ currencies and settle in your preferred currency with transparent FX conversion rates.' },
   { q: 'Do you support subscriptions and recurring billing?', a: 'Absolutely. The Subscriptions product supports trials, add-ons, metered billing, and automated dunning to recover failed payments.' },
   { q: 'How does smart routing work?', a: 'Our AI engine analyzes each transaction in real time and routes it to the gateway most likely to succeed, factoring in issuer, BIN, amount and history.' },
@@ -174,7 +174,7 @@ export const apiSteps = [
 ];
 
 export const apiSample = `// Create an order
-const order = await payflow.orders.create({
+const order = await TrustGates.orders.create({
   amount: 49900,
   currency: 'INR',
   receipt: 'rcpt_001',

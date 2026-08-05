@@ -6,7 +6,7 @@ import CTA from '../components/sections/CTA';
 export default function ProductsPage() {
   return (
     <>
-      <PageHero eyebrow="Products" title={<>A product for <span className="gradient-text">every need</span></>} subtitle="From checkout to settlement, PayFlow gives you a unified suite of payment products." />
+      <PageHero eyebrow="Products" title={<>A product for <span className="gradient-text">every need</span></>} subtitle="From checkout to settlement, TrustGates gives you a unified suite of payment products." />
       <Products />
       <PaymentMethods />
       <CTA />

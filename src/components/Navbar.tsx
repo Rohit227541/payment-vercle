@@ -39,7 +39,7 @@ export default function Navbar() {
             </svg>
           </span>
           <span className="font-display text-xl font-bold tracking-tight text-ink-900 dark:text-white">
-            PayFlow<span className="text-brand-500">.</span>
+            TrustGates<span className="text-brand-500">.</span>
           </span>
         </Link>
 

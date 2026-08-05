@@ -77,7 +77,7 @@ export default function MerchantLayout() {
                 <circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" />
               </svg>
             </span>
-            <span className="font-display text-base font-bold text-ink-900 dark:text-white">PayFlow <span className="text-xs text-brand-500 font-semibold px-1 py-0.5 rounded bg-brand-500/10 ml-1">Merchant</span></span>
+            <span className="font-display text-base font-bold text-ink-900 dark:text-white">TrustGates <span className="text-xs text-brand-500 font-semibold px-1 py-0.5 rounded bg-brand-500/10 ml-1">Merchant</span></span>
           </Link>
           <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500 p-1 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-lg">
             <X className="h-5 w-5" />

@@ -291,7 +291,7 @@ export default function Onboarding() {
             </div>
             <div className="rounded-2xl border border-brand-500/15 bg-brand-500/5 p-4 text-xs text-ink-600 dark:text-brand-300 flex gap-2">
               <HelpCircle className="h-5 w-5 text-brand-500 shrink-0" />
-              <span>Need help? Contact PayFlow merchant support available 24/7 at support@payflow.io.</span>
+              <span>Need help? Contact TrustGates merchant support available 24/7 at support@TrustGates.io.</span>
             </div>
           </aside>
 
@@ -764,7 +764,7 @@ function BankDetailsForm({
     >
       <div className="border-b border-ink-200/60 dark:border-ink-800/60 pb-4">
         <h3 className="text-xl font-bold font-display text-ink-900 dark:text-white">Settlement Bank</h3>
-        <p className="text-xs text-ink-500 mt-1">Specify where PayFlow should route your daily sales payouts.</p>
+        <p className="text-xs text-ink-500 mt-1">Specify where TrustGates should route your daily sales payouts.</p>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
