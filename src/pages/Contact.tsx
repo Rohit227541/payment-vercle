@@ -46,7 +46,7 @@ export default function Contact() {
           <div className="space-y-4">
             {[
               { icon: MapPin, title: 'Visit Us', lines: ['Prestige Tech Park', 'Marathahalli, Bengaluru 560103, India'] },
-              { icon: Mail, title: 'Email Us', lines: ['hello@TrustGates.io', 'sales@TrustGates.io'] },
+              { icon: Mail, title: 'Email Us', lines: ['hello@payflow.io', 'sales@payflow.io'] },
               { icon: Phone, title: 'Call Us', lines: ['+91 80 0000 0000', '+1 800 555 0100'] },
               { icon: Clock, title: 'Support Hours', lines: ['24×7 live chat & email', 'Phone: Mon–Fri, 9am–6pm IST'] },
             ].map((c, i) => (

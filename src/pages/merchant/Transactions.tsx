@@ -24,7 +24,6 @@ interface Transaction {
   transactionStatus: string;
   gatewayResponse: string;
   createdDate: string;
-  settlementDate: string;
 }
 
 export default function MerchantTransactions() {
@@ -62,13 +61,13 @@ export default function MerchantTransactions() {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
       const headers = {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       };
 
-      let url = `${API_BASE_URL}/recent-transactions?page=${page}&limit=10`;
+      let url = `${API_BASE_URL}/payment/history?page=${page}&limit=10`;
 
       if (debouncedSearch.trim()) {
         url += `&search=${encodeURIComponent(debouncedSearch.trim())}`;
@@ -99,19 +98,18 @@ export default function MerchantTransactions() {
 
       const transactions = result.data?.transactions || [];
       const formatted = transactions.map((t: any) => ({
-        transactionId: String(t.transaction_id),
-        orderId: String(t.order_id || 'N/A'),
-        paymentId: String(t.provider_payment_id || 'N/A'),
-        customerName: t.customer_name || 'N/A',
-        customerEmail: t.customer_email || 'N/A',
-        customerPhone: 'N/A',
+        transactionId: String(t.transactionId || t.transaction_id || 'N/A'),
+        orderId: String(t.orderId || t.order_id || 'N/A'),
+        paymentId: String(t.gatewayPaymentId || t.provider_payment_id || 'N/A'),
+        customerName: t.customerName || t.customer_name || 'N/A',
+        customerEmail: t.customerEmail || t.customer_email || 'N/A',
+        customerPhone: t.customerPhone || t.customer_phone || 'N/A',
         amount: Number(t.amount || 0).toFixed(2),
         currency: t.currency === 'INR' ? '₹' : (t.currency || '₹'),
-        paymentMethod: t.payment_method || 'N/A',
+        paymentMethod: t.paymentMethod || t.payment_method || 'N/A',
         transactionStatus: t.status || 'PENDING',
-        gatewayResponse: t.payment_provider || 'N/A',
-        createdDate: new Date(t.created_at).toLocaleString(),
-        settlementDate: 'N/A',
+        gatewayResponse: t.gatewayName || t.payment_provider || 'N/A',
+        createdDate: new Date(t.createdAt || t.created_at).toLocaleString(),
       }));
 
       setData(formatted);
@@ -130,12 +128,12 @@ export default function MerchantTransactions() {
     const headers = [
       "Transaction ID", "Order ID", "Payment ID", "Customer Name", 
       "Customer Email", "Customer Phone", "Amount", "Currency", 
-      "Payment Method", "Status", "Gateway Response", "Created Date", "Settlement Date"
+      "Payment Method", "Status", "Gateway Response", "Created Date"
     ];
     const rows = data.map(t => [
       t.transactionId, t.orderId, t.paymentId, t.customerName,
       t.customerEmail, t.customerPhone, t.amount, t.currency,
-      t.paymentMethod, t.transactionStatus, t.gatewayResponse, t.createdDate, t.settlementDate
+      t.paymentMethod, t.transactionStatus, t.gatewayResponse, t.createdDate
     ]);
     const csvContent = "data:text/csv;charset=utf-8," 
       + [headers.join(","), ...rows.map(e => e.map(val => `"${val}"`).join(","))].join("\n");
@@ -299,12 +297,11 @@ export default function MerchantTransactions() {
                     <th className="px-5 py-3 font-medium">Status</th>
                     <th className="px-5 py-3 font-medium">Gateway Response</th>
                     <th className="px-5 py-3 font-medium">Created Date</th>
-                    <th className="px-5 py-3 font-medium">Settlement Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-200/40 dark:divide-ink-800/40">
-                  {data.map((t) => (
-                    <tr key={t.transactionId} className="hover:bg-ink-50/50 dark:hover:bg-ink-900/40">
+                  {data.map((t, index) => (
+                    <tr key={t.transactionId || index} className="hover:bg-ink-50/50 dark:hover:bg-ink-900/40">
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300 whitespace-nowrap">{t.transactionId}</td>
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300 whitespace-nowrap">{t.orderId}</td>
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300 whitespace-nowrap">{t.paymentId}</td>
@@ -324,7 +321,6 @@ export default function MerchantTransactions() {
                       </td>
                       <td className="px-5 py-3.5 text-xs text-ink-500 dark:text-ink-400 max-w-xs truncate">{t.gatewayResponse}</td>
                       <td className="px-5 py-3.5 text-ink-500 dark:text-ink-400 whitespace-nowrap">{t.createdDate}</td>
-                      <td className="px-5 py-3.5 text-ink-500 dark:text-ink-400 whitespace-nowrap">{t.settlementDate}</td>
                     </tr>
                   ))}
                 </tbody>

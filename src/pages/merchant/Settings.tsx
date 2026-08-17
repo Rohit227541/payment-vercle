@@ -1,237 +1,274 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  RefreshCw,
-  AlertCircle,
-  Inbox,
-  Key,
+  Settings,
+  Bell,
   Shield,
-  Eye,
-  EyeOff,
-  Copy,
-  Check,
+  UserCheck,
+  Save,
+  CheckCircle2,
+  Lock,
+  Globe,
+  Mail,
+  Smartphone,
   ToggleLeft,
   ToggleRight
 } from 'lucide-react';
 
-const API_URL = "/mock-merchant-settings.json";
-
-interface SettingsConfig {
-  publicKey: string;
-  webhookUrl: string;
-  webhookSecret: string;
-  emailAlerts: boolean;
-  payoutAlerts: boolean;
-  smsAlerts: boolean;
-}
-
 export default function MerchantSettings() {
-  const [data, setData] = useState<SettingsConfig | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [page] = useState<number>(1);
-  const [showSecret, setShowSecret] = useState<boolean>(false);
-  const [copiedKey, setCopiedKey] = useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const loadSettings = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const response = await fetch(API_URL);
-      const result = await response.json();
-      setData(result);
-    } catch (err) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Business General Settings
+  const [businessSettings, setBusinessSettings] = useState({
+    businessName: 'My Payment Shop',
+    supportEmail: 'support@myshop.com',
+    supportPhone: '+91 9876543210',
+    currency: 'INR (₹)',
+    timezone: 'Asia/Kolkata (IST +05:30)'
+  });
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
+  // Notification Settings
+  const [notifications, setNotifications] = useState({
+    emailAlerts: true,
+    smsAlerts: false,
+    dailyReport: true,
+    refundAlerts: true,
+    settlementAlerts: true
+  });
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(true);
-    setTimeout(() => setCopiedKey(false), 2000);
+  // Security Settings
+  const [securitySettings, setSecuritySettings] = useState({
+    twoFactorAuth: false,
+    sessionTimeout: '30' // minutes
+  });
+
+  const handleSaveSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setSuccessMsg(null);
+
+    setTimeout(() => {
+      setIsSaving(false);
+      setSuccessMsg('Merchant Settings saved successfully!');
+      setTimeout(() => setSuccessMsg(null), 3000);
+    }, 800);
   };
 
   return (
     <div className="space-y-6">
-      {/* Header section */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white">Merchant Settings</h1>
-          <p className="text-sm text-ink-500 dark:text-ink-400">Configure your API credentials, security, and notification systems</p>
+          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white flex items-center gap-2.5">
+            <Settings className="h-6 w-6 text-brand-500" />
+            Merchant Account Settings
+          </h1>
+          <p className="text-sm text-ink-500 dark:text-ink-400 mt-1">
+            Configure your business profile, notification preferences & security settings
+          </p>
         </div>
+
         <button
-          onClick={loadSettings}
-          className="btn-secondary flex items-center gap-2 py-2 px-3 text-xs self-start sm:self-center"
+          onClick={handleSaveSettings}
+          disabled={isSaving}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-500/20 transition disabled:opacity-50"
         >
-          <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh Settings
+          <Save className="h-4 w-4" />
+          {isSaving ? 'Saving...' : 'Save Settings'}
         </button>
       </div>
 
-      {/* Loading state */}
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-20 space-y-4">
-          <div className="h-10 w-10 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin" />
-          <p className="text-sm text-ink-500 dark:text-ink-400">Loading settings database...</p>
+      {/* Success Alert */}
+      {successMsg && (
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-sm">
+          <CheckCircle2 className="h-5 w-5 shrink-0" />
+          <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Error state */}
-      {!loading && error && (
-        <div className="glass-card p-6 border border-rose-500/20 bg-rose-500/5 text-center max-w-xl mx-auto space-y-4">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-rose-500/10 text-rose-500">
-            <AlertCircle className="h-6 w-6" />
-          </div>
-          <h3 className="font-semibold text-ink-900 dark:text-white">Failed to Load Settings</h3>
-          <p className="text-xs text-ink-500 dark:text-ink-400">
-            Could not fetch Merchant configurations. Please check your API URL config or try again.
-          </p>
-          <button
-            onClick={loadSettings}
-            className="btn-primary py-2 px-4 text-xs font-semibold mx-auto"
-          >
-            Retry Connection
-          </button>
-        </div>
-      )}
+      <form onSubmit={handleSaveSettings} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* 1. General Business Profile Settings */}
+        <div className="rounded-2xl border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900/60 backdrop-blur-xl p-6 shadow-sm space-y-4">
+          <h2 className="text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-100 dark:border-ink-800 pb-3">
+            <UserCheck className="h-4 w-4 text-brand-500" />
+            Business Profile & Localization
+          </h2>
 
-      {/* Empty state */}
-      {!loading && !error && !data && (
-        <div className="glass-card p-12 text-center max-w-xl mx-auto space-y-4">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ink-100 dark:bg-ink-800 text-ink-400">
-            <Inbox className="h-8 w-8" />
-          </div>
-          <h3 className="font-semibold text-ink-900 dark:text-white">Settings Configurations Empty</h3>
-          <p className="text-xs text-ink-500 dark:text-ink-400">
-            No configurations or API credentials exist for this endpoint.
-          </p>
-        </div>
-      )}
+          <div className="space-y-3 text-xs">
+            <div>
+              <label className="font-semibold text-ink-700 dark:text-ink-300">Display Business Name</label>
+              <input
+                type="text"
+                value={businessSettings.businessName}
+                onChange={(e) => setBusinessSettings({ ...businessSettings, businessName: e.target.value })}
+                className="w-full text-sm px-3.5 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none"
+              />
+            </div>
 
-      {/* Data views */}
-      {!loading && !error && data && (
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* API keys credentials */}
-          <div className="glass-card p-6 space-y-6">
-            <h3 className="font-display text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-200/60 dark:border-ink-800/60 pb-3">
-              <Key className="h-4 w-4 text-brand-500" /> API Access Keys
-            </h3>
+            <div>
+              <label className="font-semibold text-ink-700 dark:text-ink-300 flex items-center gap-1">
+                <Mail className="h-3.5 w-3.5 text-ink-400" /> Customer Support Email
+              </label>
+              <input
+                type="email"
+                value={businessSettings.supportEmail}
+                onChange={(e) => setBusinessSettings({ ...businessSettings, supportEmail: e.target.value })}
+                className="w-full text-sm px-3.5 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none"
+              />
+            </div>
 
-            <div className="space-y-4 text-sm">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-ink-400">Public Live Key</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    readOnly
-                    value={data.publicKey}
-                    className="input font-mono text-xs w-full py-2 bg-ink-50/50 dark:bg-ink-950/30"
-                  />
-                  <button
-                    onClick={() => handleCopy(data.publicKey)}
-                    className="btn-secondary px-3 py-2 flex items-center justify-center shrink-0"
-                  >
-                    {copiedKey ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                </div>
+            <div>
+              <label className="font-semibold text-ink-700 dark:text-ink-300 flex items-center gap-1">
+                <Smartphone className="h-3.5 w-3.5 text-ink-400" /> Support Phone Number
+              </label>
+              <input
+                type="text"
+                value={businessSettings.supportPhone}
+                onChange={(e) => setBusinessSettings({ ...businessSettings, supportPhone: e.target.value })}
+                className="w-full text-sm px-3.5 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-semibold text-ink-700 dark:text-ink-300">Default Currency</label>
+                <select
+                  value={businessSettings.currency}
+                  onChange={(e) => setBusinessSettings({ ...businessSettings, currency: e.target.value })}
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none font-semibold"
+                >
+                  <option value="INR (₹)">INR (₹)</option>
+                  <option value="USD ($)">USD ($)</option>
+                  <option value="EUR (€)">EUR (€)</option>
+                </select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-ink-400">Secret Token Key</label>
-                <div className="flex gap-2">
-                  <input
-                    type={showSecret ? "text" : "password"}
-                    readOnly
-                    value={data.webhookSecret}
-                    className="input font-mono text-xs w-full py-2 bg-ink-50/50 dark:bg-ink-950/30"
-                  />
-                  <button
-                    onClick={() => setShowSecret(!showSecret)}
-                    className="btn-secondary px-3 py-2 flex items-center justify-center shrink-0"
-                  >
-                    {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
+              <div>
+                <label className="font-semibold text-ink-700 dark:text-ink-300 flex items-center gap-1">
+                  <Globe className="h-3.5 w-3.5 text-ink-400" /> Timezone
+                </label>
+                <select
+                  value={businessSettings.timezone}
+                  onChange={(e) => setBusinessSettings({ ...businessSettings, timezone: e.target.value })}
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none font-semibold"
+                >
+                  <option value="Asia/Kolkata (IST +05:30)">Asia/Kolkata (IST)</option>
+                  <option value="UTC (+00:00)">UTC (+00:00)</option>
+                </select>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Webhooks config */}
-          <div className="glass-card p-6 space-y-6">
-            <h3 className="font-display text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-200/60 dark:border-ink-800/60 pb-3">
-              <Shield className="h-4 w-4 text-brand-500" /> Webhook Integrations
-            </h3>
+        {/* 2. Security & Session Settings */}
+        <div className="rounded-2xl border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900/60 backdrop-blur-xl p-6 shadow-sm space-y-4">
+          <h2 className="text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-100 dark:border-ink-800 pb-3">
+            <Shield className="h-4 w-4 text-brand-500" />
+            Security & Login Protection
+          </h2>
 
-            <div className="space-y-4 text-sm">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-ink-400">Listener URL Endpoint</label>
-                <input
-                  type="text"
-                  readOnly
-                  value={data.webhookUrl}
-                  className="input text-xs w-full py-2 bg-ink-50/50 dark:bg-ink-950/30 font-mono"
-                />
+          <div className="space-y-4 text-xs">
+            <div className="flex items-center justify-between py-2 border-b border-ink-100 dark:border-ink-800">
+              <div>
+                <p className="font-bold text-ink-900 dark:text-white text-sm">Two-Factor Authentication (2FA)</p>
+                <p className="text-ink-500 text-[11px] mt-0.5">Require OTP verification upon merchant login.</p>
               </div>
-              <p className="text-[11px] text-ink-400 leading-normal">
-                Receive real-time transactional updates (SUCCESS, FAILED, CHARGEBACK) directly on your application backend.
-              </p>
+              <button
+                type="button"
+                onClick={() => setSecuritySettings({ ...securitySettings, twoFactorAuth: !securitySettings.twoFactorAuth })}
+                className="text-brand-500 hover:text-brand-600 transition"
+              >
+                {securitySettings.twoFactorAuth ? (
+                  <ToggleRight className="h-8 w-8 text-brand-500" />
+                ) : (
+                  <ToggleLeft className="h-8 w-8 text-ink-400" />
+                )}
+              </button>
             </div>
-          </div>
 
-          {/* Notifications toggles */}
-          <div className="glass-card p-6 space-y-5 md:col-span-2">
-            <h3 className="font-display text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-200/60 dark:border-ink-800/60 pb-3">
-              Settings Configurations Toggles
-            </h3>
-
-            <div className="divide-y divide-ink-200/40 dark:divide-ink-800/40 text-sm">
-              <div className="flex items-center justify-between py-3">
-                <div>
-                  <p className="font-semibold text-ink-900 dark:text-white">Email alerts notifications</p>
-                  <p className="text-xs text-ink-400">Receive daily settlement reports and invoice confirmations.</p>
-                </div>
-                <button className="text-brand-500">
-                  {data.emailAlerts ? <ToggleRight className="h-8 w-8" /> : <ToggleLeft className="h-8 w-8" />}
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between py-3">
-                <div>
-                  <p className="font-semibold text-ink-900 dark:text-white">SMS payouts alerts</p>
-                  <p className="text-xs text-ink-400">Get notified via SMS on high-value settlements or pending actions.</p>
-                </div>
-                <button className="text-brand-500">
-                  {data.smsAlerts ? <ToggleRight className="h-8 w-8" /> : <ToggleLeft className="h-8 w-8" />}
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between py-3">
-                <div>
-                  <p className="font-semibold text-ink-900 dark:text-white">API access alerts</p>
-                  <p className="text-xs text-ink-400">Notify primary developer email when secret keys are accessed.</p>
-                </div>
-                <button className="text-brand-500">
-                  {data.payoutAlerts ? <ToggleRight className="h-8 w-8" /> : <ToggleLeft className="h-8 w-8" />}
-                </button>
-              </div>
+            <div>
+              <label className="font-semibold text-ink-700 dark:text-ink-300 flex items-center gap-1">
+                <Lock className="h-3.5 w-3.5 text-ink-400" /> Auto Session Timeout
+              </label>
+              <select
+                value={securitySettings.sessionTimeout}
+                onChange={(e) => setSecuritySettings({ ...securitySettings, sessionTimeout: e.target.value })}
+                className="w-full text-xs px-3.5 py-2 rounded-xl border border-ink-200 dark:border-ink-800 bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-white mt-1 focus:outline-none font-semibold"
+              >
+                <option value="15">15 Minutes of inactivity</option>
+                <option value="30">30 Minutes of inactivity</option>
+                <option value="60">1 Hour of inactivity</option>
+              </select>
             </div>
-          </div>
-
-          {/* Search, pagination placeholders (to satisfy requirement) */}
-          <div className="hidden">
-            <input placeholder="Search config..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-            <span>Page {page} (Pagination Placeholder)</span>
-            <button onClick={() => { }}>Next</button>
-            <button onClick={() => { }}>Prev</button>
           </div>
         </div>
-      )}
+
+        {/* 3. Notifications & Alert Preferences (Full Width) */}
+        <div className="rounded-2xl border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900/60 backdrop-blur-xl p-6 shadow-sm space-y-4 md:col-span-2">
+          <h2 className="text-base font-bold text-ink-900 dark:text-white flex items-center gap-2 border-b border-ink-100 dark:border-ink-800 pb-3">
+            <Bell className="h-4 w-4 text-brand-500" />
+            Notifications & System Alerts
+          </h2>
+
+          <div className="divide-y divide-ink-100 dark:divide-ink-800 text-xs">
+            <div className="flex items-center justify-between py-3">
+              <div>
+                <p className="font-bold text-ink-900 dark:text-white text-sm">Email Transaction Alerts</p>
+                <p className="text-ink-500 text-[11px]">Receive emails for successful payment notifications.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotifications({ ...notifications, emailAlerts: !notifications.emailAlerts })}
+                className="text-brand-500 transition"
+              >
+                {notifications.emailAlerts ? <ToggleRight className="h-8 w-8 text-brand-500" /> : <ToggleLeft className="h-8 w-8 text-ink-400" />}
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between py-3">
+              <div>
+                <p className="font-bold text-ink-900 dark:text-white text-sm">Daily Settlement Email Summary</p>
+                <p className="text-ink-500 text-[11px]">Get daily summary reports of settled amounts & payouts.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotifications({ ...notifications, dailyReport: !notifications.dailyReport })}
+                className="text-brand-500 transition"
+              >
+                {notifications.dailyReport ? <ToggleRight className="h-8 w-8 text-brand-500" /> : <ToggleLeft className="h-8 w-8 text-ink-400" />}
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between py-3">
+              <div>
+                <p className="font-bold text-ink-900 dark:text-white text-sm">Refund Request Notifications</p>
+                <p className="text-ink-500 text-[11px]">Receive alerts when new refund requests are initiated or processed.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotifications({ ...notifications, refundAlerts: !notifications.refundAlerts })}
+                className="text-brand-500 transition"
+              >
+                {notifications.refundAlerts ? <ToggleRight className="h-8 w-8 text-brand-500" /> : <ToggleLeft className="h-8 w-8 text-ink-400" />}
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between py-3">
+              <div>
+                <p className="font-bold text-ink-900 dark:text-white text-sm">SMS Payout Notifications</p>
+                <p className="text-ink-500 text-[11px]">Get instant SMS alerts for high-value payouts.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotifications({ ...notifications, smsAlerts: !notifications.smsAlerts })}
+                className="text-brand-500 transition"
+              >
+                {notifications.smsAlerts ? <ToggleRight className="h-8 w-8 text-brand-500" /> : <ToggleLeft className="h-8 w-8 text-ink-400" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

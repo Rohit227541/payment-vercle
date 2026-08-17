@@ -9,15 +9,22 @@ import {
   EyeOff,
   ArrowRight,
   ShieldAlert,
+  User,
+  Building2,
+  Globe,
 } from "lucide-react";
 import AuthShell from "../components/auth/AuthShell";
 import { useMerchant } from "../context/MerchantContext";
 import { API_BASE_URL } from "../config";
 
 type SignupFormData = {
+  merchantName: string;
+  businessName: string;
   email: string;
   phone: string;
+  website?: string;
   password: string;
+  confirmPassword: string;
 };
 
 export default function Signup() {
@@ -31,16 +38,22 @@ export default function Signup() {
   } = useMerchant();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SignupFormData>({
     defaultValues: {
+      merchantName: "",
+      businessName: "",
       email: "",
       phone: "",
+      website: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -57,14 +70,17 @@ export default function Signup() {
       // Signup Merchant
       // ============================
 
-      const response = await fetch(`${API_BASE_URL}/gateway/signup`, {
+      const response = await fetch(`${API_BASE_URL}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          merchantName: data.email.split("@")[0],
+          merchantName: data.merchantName,
+          businessName: data.businessName,
           email: data.email,
+          phone: data.phone,
+          website: data.website || undefined,
           password: data.password,
         }),
       });
@@ -131,7 +147,7 @@ export default function Signup() {
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {error && (
           <div className="flex items-start gap-3 rounded-2xl bg-rose-500/10 p-4 text-sm text-rose-600 dark:text-rose-400 border border-rose-500/20">
             <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
@@ -141,6 +157,76 @@ export default function Signup() {
             </div>
           </div>
         )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Merchant Name */}
+          <div>
+            <label className="label" htmlFor="merchantName">
+              Merchant Name
+            </label>
+
+            <div className="relative group">
+              <User className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+
+              <input
+                id="merchantName"
+                type="text"
+                placeholder="John Doe"
+                className={`input pl-11 py-3 text-sm ${
+                  errors.merchantName
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("merchantName", {
+                  required: "Merchant name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Minimum 3 characters",
+                  },
+                })}
+              />
+            </div>
+            {errors.merchantName && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.merchantName.message}
+              </p>
+            )}
+          </div>
+
+          {/* Business Name */}
+          <div>
+            <label className="label" htmlFor="businessName">
+              Business Name
+            </label>
+
+            <div className="relative group">
+              <Building2 className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+
+              <input
+                id="businessName"
+                type="text"
+                placeholder="Acme Corp"
+                className={`input pl-11 py-3 text-sm ${
+                  errors.businessName
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("businessName", {
+                  required: "Business name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Minimum 3 characters",
+                  },
+                })}
+              />
+            </div>
+            {errors.businessName && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.businessName.message}
+              </p>
+            )}
+          </div>
+        </div>
 
         {/* Email */}
         <div>
@@ -155,7 +241,7 @@ export default function Signup() {
               id="email"
               type="email"
               placeholder="you@business.com"
-              className={`input pl-11 py-3.5 text-sm ${
+              className={`input pl-11 py-3 text-sm ${
                 errors.email
                   ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
                   : ""
@@ -171,108 +257,184 @@ export default function Signup() {
           </div>
 
           {errors.email && (
-            <p className="mt-1.5 text-xs text-rose-600">
+            <p className="mt-1 text-xs text-rose-600">
               {errors.email.message}
             </p>
           )}
         </div>
 
-        {/* Phone */}
-        <div>
-          <label className="label" htmlFor="phone">
-            Phone Number
-          </label>
+        {/* Phone & Website */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="label" htmlFor="phone">
+              Phone Number
+            </label>
 
-          <div className="relative group">
-            <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+            <div className="relative group">
+              <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
 
-            <input
-              id="phone"
-              type="tel"
-              placeholder="9876543210"
-              className={`input pl-11 py-3.5 text-sm ${
-                errors.phone
-                  ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
-                  : ""
-              }`}
-              {...register("phone", {
-                required: "Phone number is required",
-                pattern: {
-                  value: /^[0-9]{10}$/,
-                  message: "Phone number must be exactly 10 digits",
-                },
-              })}
-            />
+              <input
+                id="phone"
+                type="tel"
+                placeholder="9876543210"
+                className={`input pl-11 py-3 text-sm ${
+                  errors.phone
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("phone", {
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Phone number must be exactly 10 digits",
+                  },
+                })}
+              />
+            </div>
+            {errors.phone && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.phone.message}
+              </p>
+            )}
           </div>
 
-          {errors.phone && (
-            <p className="mt-1.5 text-xs text-rose-600">
-              {errors.phone.message}
-            </p>
-          )}
+          <div>
+            <label className="label" htmlFor="website">
+              Website <span className="text-ink-400 font-normal">(Optional)</span>
+            </label>
+
+            <div className="relative group">
+              <Globe className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+
+              <input
+                id="website"
+                type="url"
+                placeholder="https://example.com"
+                className={`input pl-11 py-3 text-sm ${
+                  errors.website
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("website", {
+                  pattern: {
+                    value: /^https?:\/\/([\w-]+\.)+[\w-]{2,}(\/.*)?$/i,
+                    message: "Please enter a valid URL",
+                  },
+                })}
+              />
+            </div>
+            {errors.website && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.website.message}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Password */}
-        <div>
-          <label className="label" htmlFor="password">
-            Password
-          </label>
+        {/* Passwords */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="label" htmlFor="password">
+              Password
+            </label>
 
-          <div className="relative group">
-            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+            <div className="relative group">
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
 
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              className={`input pl-11 pr-11 py-3.5 text-sm ${
-                errors.password
-                  ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
-                  : ""
-              }`}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters long",
-                },
-                pattern: {
-                  value:
-                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                  message:
-                    "Must include a letter, number and special character.",
-                },
-              })}
-            />
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className={`input pl-11 pr-11 py-3 text-sm ${
+                  errors.password
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Minimum 8 characters",
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                    message:
+                      "Include letter, number & symbol.",
+                  },
+                })}
+              />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2"
-            >
-              {showPassword ? (
-                <EyeOff className="h-4.5 w-4.5" />
-              ) : (
-                <Eye className="h-4.5 w-4.5" />
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4.5 w-4.5" />
+                ) : (
+                  <Eye className="h-4.5 w-4.5" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
-          {errors.password ? (
-            <p className="mt-1.5 text-xs text-rose-600">
-              {errors.password.message}
-            </p>
-          ) : (
-            <p className="mt-1.5 text-[11px] text-ink-400">
-              Minimum 8 characters with letters, numbers and symbols.
-            </p>
-          )}
+          <div>
+            <label className="label" htmlFor="confirmPassword">
+              Confirm Password
+            </label>
+
+            <div className="relative group">
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-500 transition-colors" />
+
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className={`input pl-11 pr-11 py-3 text-sm ${
+                  errors.confirmPassword
+                    ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"
+                    : ""
+                }`}
+                {...register("confirmPassword", {
+                  required: "Please confirm password",
+                  validate: (val: string) => {
+                    if (watch("password") != val) {
+                      return "Passwords do no match";
+                    }
+                  },
+                })}
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4.5 w-4.5" />
+                ) : (
+                  <Eye className="h-4.5 w-4.5" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="mt-1 text-xs text-rose-600">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full mt-6 flex justify-center items-center gap-2 py-3.5"
+          className="btn-primary w-full mt-4 flex justify-center items-center gap-2 py-3.5"
         >
           {loading ? (
             <>

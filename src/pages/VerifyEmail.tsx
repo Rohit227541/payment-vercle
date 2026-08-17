@@ -33,6 +33,9 @@ export default function VerifyEmail() {
     },
   });
 
+  const emailFromStorage = localStorage.getItem("merchant_email") || localStorage.getItem("merchantEmail") || "";
+  const effectiveEmail = email || emailFromStorage;
+
   // Cooldown timer for OTP Resend
   useEffect(() => {
     if (resendCooldown === 0) return;
@@ -53,14 +56,11 @@ export default function VerifyEmail() {
     try {
       const response = await fetch(`${API_BASE_URL}/verifyEmail`, {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
-          email: localStorage.getItem("merchantEmail"),
-
+          email: effectiveEmail,
           otp: data.code,
         }),
       });
@@ -72,8 +72,12 @@ export default function VerifyEmail() {
       }
 
       localStorage.setItem("is_email_verified", "true");
+      if (effectiveEmail) {
+        localStorage.setItem("merchant_email", effectiveEmail);
+        localStorage.setItem("merchantEmail", effectiveEmail);
+      }
 
-      navigate("/onboarding");
+      navigate("/login", { replace: true });
     } catch (err: any) {
       alert(err.message);
     }
@@ -90,13 +94,11 @@ export default function VerifyEmail() {
 
       const response = await fetch(`${API_BASE_URL}/resend-otp`, {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
-          email: localStorage.getItem("merchantEmail"),
+          email: effectiveEmail,
         }),
       });
 
@@ -107,14 +109,13 @@ export default function VerifyEmail() {
       }
 
       setResendSuccess(true);
-
       setResendCooldown(30);
     } catch (err: any) {
       alert(err.message);
     }
   };
 
-  if (!email) {
+  if (!effectiveEmail) {
     return (
       <AuthShell
         title="Session Expired"

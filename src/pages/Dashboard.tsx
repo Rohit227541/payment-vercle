@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   LayoutDashboard, CreditCard, Repeat, Wallet, RefreshCw, FileText, Settings, LogOut,
   TrendingUp, ArrowUpRight, ArrowDownRight, Search, Bell, Menu, X, CheckCircle2, Globe,
@@ -33,26 +33,7 @@ const statusCls: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
-  const role = localStorage.getItem('role') || 'client';
-  if (role === 'admin') {
-    return <Navigate to="/admin/dashboard" replace />;
-  }
-  if (role === 'merchant') {
-    return <Navigate to="/merchant/dashboard" replace />;
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('merchant_name');
-    localStorage.removeItem('merchant_email');
-    localStorage.removeItem('merchant');
-    localStorage.removeItem('admin');
-    navigate('/login');
-  };
 
   return (
     <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950">
@@ -62,7 +43,7 @@ export default function Dashboard() {
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-600 to-accent-500 text-white">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="13" rx="3" /><path d="M7 11h6M7 14h4" /><circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" /></svg>
             </span>
-            <span className="font-display text-sm font-bold text-ink-900 dark:text-white">TrustGates</span>
+            <span className="font-display text-sm font-bold text-ink-900 dark:text-white">PayFlow</span>
           </Link>
           <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500"><X className="h-5 w-5" /></button>
         </div>
@@ -76,12 +57,9 @@ export default function Dashboard() {
           ))}
         </nav>
         <div className="absolute bottom-0 w-full border-t border-ink-200/60 dark:border-ink-800/60 p-3">
-          <button
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 dark:text-ink-300 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition"
-          >
+          <Link to="/login" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800/60">
             <LogOut className="h-4 w-4" /> Logout
-          </button>
+          </Link>
         </div>
       </aside>
 

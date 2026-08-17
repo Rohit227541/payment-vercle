@@ -31,14 +31,14 @@ export default function Footer() {
                   <circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" />
                 </svg>
               </span>
-              <span className="font-display text-lg font-bold text-ink-900 dark:text-white">TrustGates<span className="text-brand-500">.</span></span>
+              <span className="font-display text-lg font-bold text-ink-900 dark:text-white">PayFlow<span className="text-brand-500">.</span></span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-ink-500 dark:text-ink-400">
               Secure payments for modern businesses. Accept cards, UPI, wallets and international payments with one integration.
             </p>
             <div className="mt-5 space-y-2 text-sm text-ink-500 dark:text-ink-400">
               <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-500" /> Prestige Tech Park, Bengaluru, India</p>
-              <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand-500" /> hello@TrustGates.io</p>
+              <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand-500" /> hello@payflow.io</p>
               <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand-500" /> +91 80 0000 0000</p>
             </div>
             <div className="mt-5 flex gap-2">
@@ -68,7 +68,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink-200/60 dark:border-ink-800/60 pt-6 sm:flex-row">
           <p className="text-sm text-ink-500 dark:text-ink-400">
-            © {new Date().getFullYear()} TrustGates Gateway Inc. All rights reserved.
+            © {new Date().getFullYear()} PayFlow Gateway Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-sm text-ink-500 dark:text-ink-400">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">

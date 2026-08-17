@@ -95,7 +95,7 @@ export default function MerchantReports() {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken") || localStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
@@ -218,7 +218,7 @@ export default function MerchantReports() {
                 className="input pl-10 py-1.5 text-sm w-full focus:ring-brand-500/20"
               />
             </div>
-            
+
             <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
               <div className="relative flex items-center gap-1.5">
                 <button
@@ -276,11 +276,10 @@ export default function MerchantReports() {
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300">{s.settlement_id}</td>
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300">{s.transaction_id}</td>
                       <td className="px-5 py-3.5">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                          s.settlement_status === 'SETTLED' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' :
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${s.settlement_status === 'SETTLED' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' :
                           s.settlement_status === 'PENDING' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' :
-                          'bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                        }`}>
+                            'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                          }`}>
                           {s.settlement_status}
                         </span>
                       </td>

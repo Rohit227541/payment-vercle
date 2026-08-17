@@ -46,10 +46,33 @@ export default function MerchantProfile() {
     setLoading(true);
     setError(false);
     try {
+      const storedMerchantStr = localStorage.getItem("merchant");
+      const storedKycStatus = localStorage.getItem("kyc_status");
+
+      let storedMerchant: any = null;
+      if (storedMerchantStr) {
+        try {
+          storedMerchant = JSON.parse(storedMerchantStr);
+        } catch (e) {
+          console.error("Error parsing stored merchant:", e);
+        }
+      }
+
       const response = await fetch(API_URL);
       const result = await response.json();
+
+      if (storedMerchant) {
+        result.merchantId = `MERCH-${String(storedMerchant.id || '001').padStart(4, '0')}`;
+        result.merchantName = storedMerchant.name || result.merchantName;
+        result.email = storedMerchant.email || result.email;
+      }
+      if (storedKycStatus) {
+        result.kycStatus = storedKycStatus;
+      }
+
       setData(result);
     } catch (err) {
+      console.error("Profile load error:", err);
       setError(true);
     } finally {
       setLoading(false);

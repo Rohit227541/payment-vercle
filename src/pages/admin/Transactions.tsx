@@ -10,6 +10,7 @@ import {
   Calendar,
   Building
 } from 'lucide-react';
+import { apiFetch } from '../../services/api.service';
 
 const API_URL = "/mock-admin-transactions.json";
 
@@ -46,15 +47,50 @@ export default function AdminTransactions() {
     setLoading(true);
     setError(false);
     try {
-      const response = await fetch(API_URL);
-      const result = await response.json();
-      if (Array.isArray(result)) {
-        setData(result);
+      let endpoint = `/admin/transactions?page=${page}&limit=50`;
+      if (searchQuery) endpoint += `&search=${encodeURIComponent(searchQuery)}`;
+      if (statusFilter && statusFilter !== 'ALL') endpoint += `&status=${encodeURIComponent(statusFilter)}`;
+
+      const res = await apiFetch(endpoint, {}, true);
+      if (res.success && res.data) {
+        const txns = Array.isArray(res.data) ? res.data : (res.data.transactions || []);
+        if (txns.length > 0) {
+          const formatted = txns.map((t: any) => ({
+            transactionId: String(t.transaction_id || t.transactionId),
+            merchantName: t.merchant_name || `Merchant #${t.merchant_id}`,
+            merchantCode: t.merchant_code || `MER${t.merchant_id}`,
+            orderId: t.order_id || 'N/A',
+            paymentId: t.provider_payment_id || t.paymentId || 'N/A',
+            customerName: t.customer_name || 'N/A',
+            customerEmail: t.customer_email || 'N/A',
+            customerPhone: t.customer_phone || 'N/A',
+            currency: t.currency === 'INR' || !t.currency ? '₹' : t.currency,
+            amount: Number(t.amount || 0).toLocaleString(),
+            paymentMethod: t.payment_method || 'UPI',
+            transactionStatus: t.status || 'PENDING',
+            gatewayResponse: t.gateway_response || 'Captured successfully',
+            createdDate: t.created_at ? new Date(t.created_at).toLocaleString() : 'N/A',
+            settlementDate: t.settled_at ? new Date(t.settled_at).toLocaleDateString() : 'Pending'
+          }));
+          setData(formatted);
+        } else {
+          const response = await fetch(API_URL);
+          const result = await response.json();
+          setData(result);
+        }
       } else {
-        setData(null);
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
       }
     } catch (err) {
-      setError(true);
+      try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
+      } catch (fallbackErr) {
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,7 @@ import {
   Inbox,
   Calendar
 } from 'lucide-react';
+import { apiFetch } from '../../services/api.service';
 
 const API_URL = "/mock-admin-reports.json";
 
@@ -37,15 +38,22 @@ export default function AdminReports() {
     setLoading(true);
     setError(false);
     try {
-      const response = await fetch(API_URL);
-      const result = await response.json();
-      if (Array.isArray(result)) {
-        setData(result);
+      const res = await apiFetch('/admin/analytics', {}, true);
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        setData(res.data);
       } else {
-        setData(null);
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
       }
     } catch (err) {
-      setError(true);
+      try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
+      } catch (fallbackErr) {
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -12,12 +12,22 @@ import {
   Menu,
   X,
   Search,
+  QrCode,
+  Landmark,
+  RotateCcw,
+  Key
 } from 'lucide-react';
+
+import { useAdmin } from '../context/AdminContext';
 
 const navItems = [
   { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/admin/merchants', icon: Users, label: 'Merchants' },
+  { path: '/admin/api-management', icon: Key, label: 'API Management' },
   { path: '/admin/transactions', icon: CreditCard, label: 'Transactions' },
+  { path: '/admin/payment-methods', icon: QrCode, label: 'Payment Methods' },
+
+  { path: '/admin/refunds', icon: RotateCcw, label: 'Refunds' },
   { path: '/admin/reports', icon: FileText, label: 'Reports' },
   { path: '/admin/charges', icon: Percent, label: 'Charges' },
   { path: '/admin/settings', icon: Settings, label: 'Settings' },
@@ -29,14 +39,8 @@ export default function AdminLayout() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { adminLogout } = useAdmin();
   const [profile, setProfile] = useState<{ adminName: string; role: string } | null>(null);
-
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
-
-  if (!token || role !== 'admin') {
-    return <Navigate to="/login" replace />;
-  }
 
   const loadAdminHeader = async () => {
     try {
@@ -52,14 +56,9 @@ export default function AdminLayout() {
     loadAdminHeader();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('admin');
-    localStorage.removeItem('merchant');
-    localStorage.removeItem('merchant_name');
-    localStorage.removeItem('merchant_email');
-    navigate('/login');
+  const handleLogout = async () => {
+    await adminLogout();
+    navigate('/admin/login', { replace: true });
   };
 
   return (
@@ -74,46 +73,48 @@ export default function AdminLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900/60 backdrop-blur-xl transition-transform duration-200 lg:static lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900/60 backdrop-blur-xl transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 flex flex-col justify-between shrink-0 ${open ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
-        <div className="flex h-16 items-center justify-between px-5">
-          <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-purple-600 to-indigo-500 text-white shadow-md shadow-purple-500/10">
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="6" width="18" height="13" rx="3" />
-                <path d="M7 11h6M7 14h4" />
-                <circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" />
-              </svg>
-            </span>
-            <span className="font-display text-base font-bold text-ink-900 dark:text-white">TrustGates <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold px-1 py-0.5 rounded bg-purple-500/10 ml-1">Admin</span></span>
-          </Link>
-          <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500 p-1 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-lg">
-            <X className="h-5 w-5" />
-          </button>
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="flex h-16 items-center justify-between px-5 shrink-0">
+            <Link to="/" className="flex items-center gap-2.5">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-purple-600 to-indigo-500 text-white shadow-md shadow-purple-500/10">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="6" width="18" height="13" rx="3" />
+                  <path d="M7 11h6M7 14h4" />
+                  <circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" />
+                </svg>
+              </span>
+              <span className="font-display text-base font-bold text-ink-900 dark:text-white">PayFlow <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold px-1 py-0.5 rounded bg-purple-500/10 ml-1">Admin</span></span>
+            </Link>
+            <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500 p-1 hover:bg-ink-100 dark:hover:bg-ink-800 rounded-lg">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.label}
+                  to={item.path}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${isActive
+                      ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300'
+                      : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800/60'
+                    }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav className="px-3 py-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.label}
-                to={item.path}
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${isActive
-                    ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300'
-                    : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800/60'
-                  }`}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="absolute bottom-0 w-full border-t border-ink-200/60 dark:border-ink-800/60 p-3">
+        <div className="border-t border-ink-200/60 dark:border-ink-800/60 p-3 shrink-0">
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 dark:text-ink-300 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition"

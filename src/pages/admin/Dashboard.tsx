@@ -10,6 +10,7 @@ import {
   Inbox,
   CreditCard
 } from 'lucide-react';
+import { apiFetch } from '../../services/api.service';
 
 const API_URL = "/mock-admin-dashboard.json";
 
@@ -54,11 +55,56 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(false);
     try {
-      const response = await fetch(API_URL);
-      const result = await response.json();
-      setData(result);
+      const res = await apiFetch('/admin/dashboard/summary', {}, true);
+      if (res.success && res.data) {
+        const stats = res.data;
+        const merchantsRes = await apiFetch('/admin/merchant/get-merchant', {}, true);
+        const rawMerchants = merchantsRes.success && Array.isArray(merchantsRes.data) ? merchantsRes.data : [];
+
+        const formattedMerchants = rawMerchants.map((m: any) => ({
+          merchantId: String(m.merchant_id || m.merchant_code),
+          businessName: m.business_name || m.merchant_name || 'N/A',
+          merchantName: m.merchant_name || 'N/A',
+          email: m.email || 'N/A',
+          phone: m.phone || 'N/A',
+          website: m.website || 'N/A',
+          businessType: m.business_type || 'Sole Proprietorship',
+          kycStatus: m.kyc_status || 'PENDING',
+          approvalStatus: m.approval_status || 'PENDING',
+          apiKey: m.merchant_code || 'N/A',
+          secretKey: '••••••••',
+          accountStatus: m.account_status || 'HOLD',
+          createdDate: m.created_at ? new Date(m.created_at).toLocaleDateString() : 'N/A'
+        }));
+
+        setData({
+          stats: {
+            totalTransactions: Number(stats.totalTransactions || 0),
+            successfulTransactions: Number(stats.successfulTransactions || 0),
+            failedTransactions: Number(stats.failedTransactions || 0),
+            pendingTransactions: Number(stats.pendingTransactions || 0),
+            refundCount: Number(stats.refundCount || 0),
+            chargebacks: Number(stats.chargebacks || 0),
+            todayRevenue: `₹${Number(stats.todayRevenue || 0).toLocaleString()}`,
+            monthlyRevenue: `₹${Number(stats.monthlyRevenue || 0).toLocaleString()}`,
+            availableBalance: `₹${Number(stats.totalTransactionAmount || 0).toLocaleString()}`,
+            settledAmount: `₹${Number(stats.settledAmount || 0).toLocaleString()}`,
+          },
+          pendingMerchants: formattedMerchants
+        });
+      } else {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
+      }
     } catch (err) {
-      setError(true);
+      try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        setData(result);
+      } catch (fallbackErr) {
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }

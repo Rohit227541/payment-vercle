@@ -5,7 +5,7 @@ import PageHero from '../components/PageHero';
 import CTA from '../components/sections/CTA';
 
 const posts = [
-  { tag: 'Engineering', title: 'How we achieved 99.99% uptime with multi-region active-active', excerpt: 'A deep dive into the architecture that keeps TrustGates available around the clock.', date: 'Jul 2, 2025', read: '8 min' },
+  { tag: 'Engineering', title: 'How we achieved 99.99% uptime with multi-region active-active', excerpt: 'A deep dive into the architecture that keeps PayFlow available around the clock.', date: 'Jul 2, 2025', read: '8 min' },
   { tag: 'Product', title: 'Introducing Smart Routing: AI-driven payment optimization', excerpt: 'How our routing engine pushes success rates above 99%.', date: 'Jun 24, 2025', read: '6 min' },
   { tag: 'Security', title: 'Inside our PCI DSS Level 1 compliance journey', excerpt: 'What it takes to build and maintain the highest level of payment security.', date: 'Jun 12, 2025', read: '10 min' },
   { tag: 'Developers', title: '5 tips for a faster checkout integration', excerpt: 'Practical advice to reduce drop-offs and improve conversion.', date: 'May 30, 2025', read: '5 min' },
@@ -16,7 +16,7 @@ const posts = [
 export default function Blog() {
   return (
     <>
-      <PageHero eyebrow="Blog" title={<>Insights from the <span className="gradient-text">TrustGates team</span></>} subtitle="Product updates, engineering deep dives and stories from our merchants." />
+      <PageHero eyebrow="Blog" title={<>Insights from the <span className="gradient-text">PayFlow team</span></>} subtitle="Product updates, engineering deep dives and stories from our merchants." />
 
       <section className="section">
         <div className="container-px">

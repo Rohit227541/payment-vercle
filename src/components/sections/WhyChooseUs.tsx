@@ -7,7 +7,7 @@ export default function WhyChooseUs() {
     <section className="section bg-white/40 dark:bg-ink-900/30">
       <div className="container-px">
         <SectionHeading
-          eyebrow="Why TrustGates"
+          eyebrow="Why PayFlow"
           title={<>Why businesses <span className="gradient-text">choose us</span></>}
           subtitle="Enterprise-grade infrastructure, developer-first APIs and support that never sleeps."
         />
