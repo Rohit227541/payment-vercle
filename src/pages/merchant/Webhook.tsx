@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Webhook, Plus, Trash2, Edit2, Play, AlertCircle, CheckCircle2, Clock, Activity, RefreshCw, Power, PowerOff, Database, Check
+  Webhook,
+  Plus,
+  Trash2,
+  Edit2,
+  Play,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Activity,
+  RefreshCw,
+  Power,
+  PowerOff,
+  Database,
+  Check
 } from 'lucide-react';
 import {
   getWebhooks, createWebhook, updateWebhook, deleteWebhook,
