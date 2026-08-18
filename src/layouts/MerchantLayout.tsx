@@ -80,24 +80,6 @@ export default function MerchantLayout() {
   const isUnderReview = !isApproved;
 
   // ==========================================================
-  // DEBUG
-  // Remove this later if you don't need it
-  // ==========================================================
-
-  console.log('MerchantLayout Status:', {
-    accountStatus,
-    kycStatus,
-    approvalStatus,
-
-    normalizedAccountStatus,
-    normalizedKycStatus,
-    normalizedApprovalStatus,
-
-    isApproved,
-    isUnderReview,
-  });
-
-  // ==========================================================
   // REFUND / PAYOUT DROPDOWN
   // ==========================================================
 
