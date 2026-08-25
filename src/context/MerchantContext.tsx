@@ -353,7 +353,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Signup failed'
+          'Signup failed'
         );
       }
 
@@ -503,7 +503,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Email verification failed.'
+          'Email verification failed.'
         );
       }
 
@@ -621,7 +621,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Failed to resend OTP.'
+          'Failed to resend OTP.'
         );
       }
 
@@ -661,7 +661,7 @@ export const MerchantProvider: React.FC<{
     }));
 
     try {
-
+      const baseUrl = API_BASE_URL.replace(/\/merchant\/?$/, '');
       const currentToken =
         localStorage.getItem(
           'accessToken'
@@ -670,7 +670,7 @@ export const MerchantProvider: React.FC<{
         state.accessToken;
 
       const response = await fetch(
-        `${API_BASE_URL}/upload-kyc-doc`,
+        `${baseUrl}/merchant/upload-kyc-doc`,
         {
           method: 'POST',
 
@@ -736,9 +736,9 @@ export const MerchantProvider: React.FC<{
     }));
 
     try {
-
+      const baseUrl = API_BASE_URL.replace(/\/merchant\/?$/, '');
       const response = await fetch(
-        `${API_BASE_URL}/login`,
+        `${baseUrl}/merchant/login`,
         {
           method: 'POST',
 
@@ -757,7 +757,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Login failed'
+          'Login failed'
         );
       }
 
@@ -991,7 +991,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Failed to send reset email.'
+          'Failed to send reset email.'
         );
       }
 
@@ -1056,7 +1056,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Password reset failed.'
+          'Password reset failed.'
         );
       }
 
@@ -1119,7 +1119,7 @@ export const MerchantProvider: React.FC<{
       if (!response.ok) {
         throw new Error(
           responseData.message ||
-            'Failed to resend reset OTP.'
+          'Failed to resend reset OTP.'
         );
       }
 
