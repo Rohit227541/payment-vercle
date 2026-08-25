@@ -9,7 +9,7 @@ import {
   Edit2
 } from 'lucide-react';
 
-const API_URL = "/mock-admin-charges.json";
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000') + "/admin/charges";
 
 interface SystemChargeConfig {
   merchant_id: string;
@@ -41,7 +41,7 @@ export default function AdminCharges() {
       if (Array.isArray(result)) {
         setData(result);
       } else {
-        setData(null);
+        setData([]);
       }
     } catch (err) {
       setError(true);

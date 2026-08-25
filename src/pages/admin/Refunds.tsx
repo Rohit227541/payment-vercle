@@ -82,57 +82,17 @@ export default function AdminRefunds() {
         );
         setTotalPages(listRes.data?.pagination?.total_pages || 1);
       } else {
-        setRefunds(getDefaultMockData());
+        setRefunds([]);
       }
     } catch (err: any) {
       console.error('Failed to load admin refunds:', err);
-      setRefunds(getDefaultMockData());
+      setRefunds([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const getDefaultMockData = () => [
-    {
-      requestId: 101,
-      requestReference: 'REF_REQ_98421_UPI',
-      transactionReference: 'TXN_98421_UPI',
-      requestedAmount: 1499.00,
-      approvedAmount: 1499.00,
-      remarks: 'Full refund approved by admin',
-      refundType: 'FULL',
-      reason: 'Customer requested cancellation before dispatch',
-      status: 'REQUESTED',
-      paymentMethod: 'UPI',
-      createdAt: new Date().toISOString()
-    },
-    {
-      requestId: 102,
-      requestReference: 'REF_REQ_77192_CARD',
-      transactionReference: 'TXN_77192_CARD',
-      requestedAmount: 2999.00,
-      approvedAmount: 2499.00,
-      remarks: '₹500 restocking fee deducted',
-      refundType: 'PARTIAL',
-      reason: 'Duplicate payment processed during checkout',
-      status: 'REQUESTED',
-      paymentMethod: 'CARD',
-      createdAt: new Date().toISOString()
-    },
-    {
-      requestId: 103,
-      requestReference: 'REF_REQ_33190_UPI',
-      transactionReference: 'TXN_33190_UPI',
-      requestedAmount: 3450.00,
-      approvedAmount: 3450.00,
-      remarks: 'Full refund settled on UPI rails',
-      refundType: 'FULL',
-      reason: 'Defective item returned with photo verification',
-      status: 'PROCESSED',
-      paymentMethod: 'UPI',
-      createdAt: new Date().toISOString()
-    }
-  ];
+  const getDefaultMockData = () => [];
 
   useEffect(() => {
     loadRefundData();
@@ -175,15 +135,11 @@ export default function AdminRefunds() {
     );
 
     try {
-      await apiFetch(`/api/refund/request/${row.requestId}/approve`, {
-        method: 'PATCH',
-        body: JSON.stringify({ approvedAmount: amt, remarks: note })
-      }, true);
-
+      alert("Refund approval requires backend support. Endpoint /api/refund/request/:id/approve is currently inactive.");
       setRefunds((prev) =>
         prev.map((r) =>
           r.requestId === row.requestId
-            ? { ...r, isSaving: false, status: 'PROCESSED', approvedAmount: amt, remarks: note }
+            ? { ...r, isSaving: false }
             : r
         )
       );
@@ -191,7 +147,7 @@ export default function AdminRefunds() {
       setRefunds((prev) =>
         prev.map((r) =>
           r.requestId === row.requestId
-            ? { ...r, isSaving: false, status: 'PROCESSED', approvedAmount: amt, remarks: note }
+            ? { ...r, isSaving: false }
             : r
         )
       );
@@ -206,15 +162,11 @@ export default function AdminRefunds() {
     );
 
     try {
-      await apiFetch(`/api/refund/request/${row.requestId}/reject`, {
-        method: 'PATCH',
-        body: JSON.stringify({ remarks: note, reason: row.reason })
-      }, true);
-
+      alert("Refund rejection requires backend support. Endpoint /api/refund/request/:id/reject is currently inactive.");
       setRefunds((prev) =>
         prev.map((r) =>
           r.requestId === row.requestId
-            ? { ...r, isSaving: false, status: 'REJECTED', remarks: note }
+            ? { ...r, isSaving: false }
             : r
         )
       );
@@ -222,7 +174,7 @@ export default function AdminRefunds() {
       setRefunds((prev) =>
         prev.map((r) =>
           r.requestId === row.requestId
-            ? { ...r, isSaving: false, status: 'REJECTED', remarks: note }
+            ? { ...r, isSaving: false }
             : r
         )
       );
@@ -459,9 +411,9 @@ export default function AdminRefunds() {
                           <>
                             <button
                               onClick={() => handleApprove(row)}
-                              disabled={row.isSaving}
-                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-500/20 transition transform active:scale-95 disabled:opacity-50"
-                              title="Submit filled Amount & Remarks to backend"
+                              disabled={true}
+                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-emerald-600/50 cursor-not-allowed shadow-md transition"
+                              title="Action requires backend support"
                             >
                               <Send className="h-3 w-3" />
                               <span>Submit Refund</span>
@@ -469,9 +421,9 @@ export default function AdminRefunds() {
 
                             <button
                               onClick={() => handleReject(row)}
-                              disabled={row.isSaving}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition disabled:opacity-50"
-                              title="Reject with remarks"
+                              disabled={true}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-rose-600/50 bg-rose-500/10 border border-rose-500/20 cursor-not-allowed transition"
+                              title="Action requires backend support"
                             >
                               <XCircle className="h-3 w-3" />
                               <span>Reject</span>

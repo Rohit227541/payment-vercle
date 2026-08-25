@@ -11,7 +11,7 @@ import {
   Save
 } from 'lucide-react';
 
-const API_URL = "/mock-admin-settings.json";
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000') + "/admin/settings";
 
 interface SystemConfig {
   merchantAutoApprove: boolean;

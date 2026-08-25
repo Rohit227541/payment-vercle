@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../../services/api.service';
 
-const API_URL = "/mock-admin-reports.json";
+const API_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000') + "/admin/reports";
 
 interface PlatformSummaryReport {
   id: string;
@@ -42,18 +42,12 @@ export default function AdminReports() {
       if (res.success && Array.isArray(res.data) && res.data.length > 0) {
         setData(res.data);
       } else {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        setData(result);
+        setData([]);
       }
     } catch (err) {
-      try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        setData(result);
-      } catch (fallbackErr) {
-        setError(true);
-      }
+      console.error('Failed to load admin reports:', err);
+      setError(true);
+      setData([]);
     } finally {
       setLoading(false);
     }

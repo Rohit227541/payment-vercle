@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../../services/api.service';
 
-const API_URL = "/mock-admin-transactions.json";
+
 
 interface SystemTransaction {
   transactionId: string;
@@ -32,7 +32,12 @@ interface SystemTransaction {
   settlementDate: string;
 }
 
-export default function AdminTransactions() {
+interface AdminTransactionsProps {
+  title?: string;
+  endpoint?: string;
+}
+
+export default function AdminTransactions({ title = "System Transactions", endpoint = "/admin/transactions" }: AdminTransactionsProps) {
   const [data, setData] = useState<SystemTransaction[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -47,50 +52,47 @@ export default function AdminTransactions() {
     setLoading(true);
     setError(false);
     try {
-      let endpoint = `/admin/transactions?page=${page}&limit=50`;
-      if (searchQuery) endpoint += `&search=${encodeURIComponent(searchQuery)}`;
-      if (statusFilter && statusFilter !== 'ALL') endpoint += `&status=${encodeURIComponent(statusFilter)}`;
+      let apiEndpoint = `${endpoint}?page=${page}&limit=50`;
+      if (searchQuery) apiEndpoint += `&search=${encodeURIComponent(searchQuery)}`;
+      if (statusFilter && statusFilter !== 'ALL') apiEndpoint += `&status=${encodeURIComponent(statusFilter)}`;
 
-      const res = await apiFetch(endpoint, {}, true);
+      const res = await apiFetch(apiEndpoint, {}, true);
       if (res.success && res.data) {
-        const txns = Array.isArray(res.data) ? res.data : (res.data.transactions || []);
-        if (txns.length > 0) {
-          const formatted = txns.map((t: any) => ({
-            transactionId: String(t.transaction_id || t.transactionId),
-            merchantName: t.merchant_name || `Merchant #${t.merchant_id}`,
-            merchantCode: t.merchant_code || `MER${t.merchant_id}`,
-            orderId: t.order_id || 'N/A',
-            paymentId: t.provider_payment_id || t.paymentId || 'N/A',
-            customerName: t.customer_name || 'N/A',
-            customerEmail: t.customer_email || 'N/A',
-            customerPhone: t.customer_phone || 'N/A',
-            currency: t.currency === 'INR' || !t.currency ? '₹' : t.currency,
-            amount: Number(t.amount || 0).toLocaleString(),
-            paymentMethod: t.payment_method || 'UPI',
-            transactionStatus: t.status || 'PENDING',
-            gatewayResponse: t.gateway_response || 'Captured successfully',
-            createdDate: t.created_at ? new Date(t.created_at).toLocaleString() : 'N/A',
-            settlementDate: t.settled_at ? new Date(t.settled_at).toLocaleDateString() : 'Pending'
-          }));
-          setData(formatted);
-        } else {
-          const response = await fetch(API_URL);
-          const result = await response.json();
-          setData(result);
-        }
+        const txns = Array.isArray(res.data) ? res.data : (
+          res.data.transactions || 
+          res.data.netBanking || 
+          res.data.upi || 
+          res.data.wallets || 
+          res.data.cards || 
+          res.data.emi || 
+          res.data.paylater || 
+          []
+        );
+        const formatted = txns.map((t: any) => ({
+          transactionId: String(t.transaction_id || t.transactionId || t.id || 'N/A'),
+          merchantName: t.merchant_name || t.merchantName || `Merchant #${t.merchant_id || 'Unknown'}`,
+          merchantCode: t.merchant_code || t.merchantCode || `MER${t.merchant_id || ''}`,
+          orderId: t.order_id || t.orderId || 'N/A',
+          paymentId: t.provider_payment_id || t.paymentId || 'N/A',
+          customerName: t.customer_name || t.customerName || 'N/A',
+          customerEmail: t.customer_email || t.customerEmail || 'N/A',
+          customerPhone: t.customer_phone || t.customerPhone || 'N/A',
+          currency: t.currency === 'INR' || !t.currency ? '₹' : t.currency,
+          amount: Number(t.amount || 0).toLocaleString(),
+          paymentMethod: t.payment_method || t.paymentMethod || 'UPI',
+          transactionStatus: t.status || 'PENDING',
+          gatewayResponse: t.gateway_response || t.gatewayResponse || 'Captured successfully',
+          createdDate: t.created_at || t.createdAt ? new Date(t.created_at || t.createdAt).toLocaleString() : 'N/A',
+          settlementDate: t.settled_at || t.settledAt ? new Date(t.settled_at || t.settledAt).toLocaleDateString() : 'Pending'
+        }));
+        setData(formatted);
       } else {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        setData(result);
+        setData([]);
       }
     } catch (err) {
-      try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        setData(result);
-      } catch (fallbackErr) {
-        setError(true);
-      }
+      console.error('Failed to load transactions:', err);
+      setError(true);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -128,7 +130,7 @@ export default function AdminTransactions() {
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white">Platform Transactions</h1>
+          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white">{title}</h1>
           <p className="text-sm text-ink-500 dark:text-ink-400">System-wide transaction database ledger logs</p>
         </div>
         <div className="flex gap-2">
@@ -188,6 +190,38 @@ export default function AdminTransactions() {
       {/* Main transactions view */}
       {!loading && !error && data && data.length > 0 && (
         <>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="glass-card p-4 flex flex-col gap-1 border border-purple-500/20 bg-purple-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Total Txns</span>
+              <span className="text-2xl font-bold text-ink-900 dark:text-white">{data.length}</span>
+            </div>
+            <div className="glass-card p-4 flex flex-col gap-1 border border-amber-500/20 bg-amber-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Pending</span>
+              <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">{data.filter(t => t.transactionStatus === 'PENDING').length}</span>
+            </div>
+            <div className="glass-card p-4 flex flex-col gap-1 border border-emerald-500/20 bg-emerald-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Success</span>
+              <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{data.filter(t => t.transactionStatus === 'SUCCESS').length}</span>
+            </div>
+            <div className="glass-card p-4 flex flex-col gap-1 border border-rose-500/20 bg-rose-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Failed</span>
+              <span className="text-2xl font-bold text-rose-600 dark:text-rose-400">{data.filter(t => t.transactionStatus === 'FAILED').length}</span>
+            </div>
+            <div className="glass-card p-4 flex flex-col gap-1 border border-blue-500/20 bg-blue-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Success Rate</span>
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {data.length > 0 ? ((data.filter(t => t.transactionStatus === 'SUCCESS').length / data.length) * 100).toFixed(1) + '%' : '0%'}
+              </span>
+            </div>
+            <div className="glass-card p-4 flex flex-col gap-1 border border-indigo-500/20 bg-indigo-500/5">
+              <span className="text-xs text-ink-500 dark:text-ink-400 font-medium uppercase tracking-wider">Avg Amount</span>
+              <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                ₹{data.length > 0 ? (data.reduce((acc, t) => acc + (parseFloat(t.amount.replace(/,/g, '')) || 0), 0) / data.length).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
+              </span>
+            </div>
+          </div>
+
           {/* Filters Bar */}
           <div className="grid gap-3 sm:flex items-center justify-between bg-white dark:bg-ink-900 p-4 rounded-xl border border-ink-200/60 dark:border-ink-800/60">
             <div className="relative w-full sm:w-80">

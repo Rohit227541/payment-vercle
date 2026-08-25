@@ -18,10 +18,11 @@ import {
   Clock,
   Building
 } from 'lucide-react';
-import { useAdmin } from '../../context/AdminContext';
-import { apiFetch } from '../../services/api.service';
-import { API_BASE_URL } from '../../config';
-import { useNavigate } from 'react-router-dom';
+import { useAdmin } from '../../../context/AdminContext';
+import { apiFetch } from '../../../services/api.service';
+import { API_BASE_URL } from '../../../config';
+
+
 interface MerchantItem {
   merchantId: string;
   businessName: string;
@@ -38,18 +39,25 @@ interface MerchantItem {
   createdDate: string;
 }
 
-export default function AdminMerchants() {
+export default function ActivateApproveMerchant() {
   const { adminToken } = useAdmin();
-  const navigate = useNavigate();
   const [data, setData] = useState<MerchantItem[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [page] = useState<number>(1);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
-  const itemsPerPage = 10;
-  // Submitting state used for Edit Modal
+
+  // Add Merchant State
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    businessName: '',
+    merchantName: '',
+    email: '',
+    phone: '',
+    website: ''
+  });
 
   // Edit Merchant State
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -89,19 +97,19 @@ export default function AdminMerchants() {
     setError(false);
     try {
       let allMerchants: any[] = [];
-      let fetchPage = 1;
-      let fetchTotalPages = 1;
+      let currentPage = 1;
+      let totalPages = 1;
 
       do {
-        const res = await apiFetch(`/admin/merchant/get-merchant?limit=100&page=${fetchPage}`, {}, true);
+        const res = await apiFetch(`/admin/merchant/get-merchant?limit=100&page=${currentPage}`, {}, true);
         if (res.success && Array.isArray(res.data)) {
           allMerchants = [...allMerchants, ...res.data];
-          fetchTotalPages = res.pagination?.totalPages || 1;
-          fetchPage++;
+          totalPages = res.pagination?.totalPages || 1;
+          currentPage++;
         } else {
           break; // Stop on error or invalid response
         }
-      } while (fetchPage <= fetchTotalPages);
+      } while (currentPage <= totalPages);
 
       if (allMerchants.length > 0) {
         const formatted = allMerchants.map((m: any) => ({
@@ -149,6 +157,37 @@ export default function AdminMerchants() {
       setIsDetailsModalOpen(false);
     } finally {
       setDetailsLoading(false);
+    }
+  };
+
+  const handleAddMerchantSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await apiFetch('/admin/merchant/create-merchant', {
+        method: 'POST',
+        body: JSON.stringify({
+          businessName: formData.businessName,
+          merchantName: formData.merchantName,
+          email: formData.email,
+          phone: formData.phone,
+          website: formData.website,
+          password: 'Password@123',
+        }),
+      }, true);
+      
+      if (!res.success) {
+        throw new Error(res.message || 'Failed to create merchant');
+      }
+
+      alert(`Merchant added successfully!`);
+      loadMerchants();
+      setIsAddModalOpen(false);
+      setFormData({ businessName: '', merchantName: '', email: '', phone: '', website: '' });
+    } catch (err: any) {
+      alert('Error creating merchant: ' + (err.message || 'Something went wrong'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -364,33 +403,17 @@ export default function AdminMerchants() {
     }
   };
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
-
-  const filteredMerchants = data ? data.filter(m => 
-    (statusFilter === 'ALL' || m.accountStatus === statusFilter) &&
-    (m.merchantId.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     m.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     m.businessName.toLowerCase().includes(searchQuery.toLowerCase()))
-  ) : [];
-
-  const totalItems = filteredMerchants.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentMerchants = filteredMerchants.slice(startIndex, startIndex + itemsPerPage);
-
   return (
     <div className="space-y-6">
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white">Merchant Management</h1>
-          <p className="text-sm text-ink-500 dark:text-ink-400">Manage all registered merchants, statuses, and profiles</p>
+          <h1 className="font-display text-2xl font-bold text-ink-900 dark:text-white">Activate & Approve Merchants</h1>
+          <p className="text-sm text-ink-500 dark:text-ink-400">Activate or suspend merchant accounts and approve registrations.</p>
         </div>
         <div className="flex items-center gap-2.5 self-start sm:self-center">
           <button
-            onClick={() => navigate('/admin/merchants/add')}
+            onClick={() => setIsAddModalOpen(true)}
             className="bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-500/25 flex items-center gap-2 py-2 px-3.5 text-xs font-semibold rounded-xl transition"
           >
             <UserPlus className="h-4 w-4" />
@@ -436,7 +459,7 @@ export default function AdminMerchants() {
           </div>
           <h3 className="font-semibold text-ink-900 dark:text-white">No Merchants Found</h3>
           <p className="text-xs text-ink-500 dark:text-ink-400">No merchant registrations exist in system records yet.</p>
-          <button onClick={() => navigate('/admin/merchants/add')} className="bg-purple-600 hover:bg-purple-500 text-white rounded-xl py-2 px-4 text-xs font-semibold mx-auto transition">
+          <button onClick={() => setIsAddModalOpen(true)} className="bg-purple-600 hover:bg-purple-500 text-white rounded-xl py-2 px-4 text-xs font-semibold mx-auto transition">
             + Add First Merchant
           </button>
         </div>
@@ -489,7 +512,10 @@ export default function AdminMerchants() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-200/40 dark:divide-ink-800/40">
-                  {currentMerchants.map((m) => (
+                  {data.filter(m => 
+                    (statusFilter === 'ALL' || m.accountStatus === statusFilter) &&
+                    (m.merchantId.toLowerCase().includes(searchQuery.toLowerCase()) || m.email.toLowerCase().includes(searchQuery.toLowerCase()) || m.businessName.toLowerCase().includes(searchQuery.toLowerCase()))
+                  ).map((m) => (
                     <tr key={m.merchantId} className="hover:bg-ink-50/50 dark:hover:bg-ink-900/40 transition-colors">
                       <td className="px-5 py-3.5 font-mono text-xs text-ink-600 dark:text-ink-300 whitespace-nowrap">{m.merchantId}</td>
                       <td className="px-5 py-3.5 whitespace-nowrap">
@@ -535,20 +561,21 @@ export default function AdminMerchants() {
                           
                           <motion.button 
                             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                            onClick={() => openEditModal(m)} 
-                            className="p-2 rounded-xl bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
-                            title="Edit Merchant"
+                            onClick={() => confirmStatusChange(m.merchantId, m.businessName, m.accountStatus)} 
+                            className="p-2 rounded-xl bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors"
+                            title={m.accountStatus === 'ACTIVE' ? "Suspend Account" : "Activate Account"}
                           >
-                            <Edit className="h-4 w-4" />
+                            <Power className="h-4 w-4" />
                           </motion.button>
                           
                           <motion.button 
                             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                            onClick={() => confirmDelete(m.merchantId, m.businessName)} 
-                            className="p-2 rounded-xl bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 transition-colors ml-1"
-                            title="Delete Merchant"
+                            onClick={() => confirmApprove(m.merchantId, m.businessName)} 
+                            disabled={m.approvalStatus === 'APPROVED'}
+                            className={`p-2 rounded-xl transition-colors ${m.approvalStatus === 'APPROVED' ? 'bg-ink-50 text-ink-300 dark:bg-ink-900 dark:text-ink-700 cursor-not-allowed' : 'bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-500/10'}`}
+                            title="Approve Merchant"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <CheckCircle2 className="h-4 w-4" />
                           </motion.button>
                         </div>
                       </td>
@@ -557,33 +584,6 @@ export default function AdminMerchants() {
                 </tbody>
               </table>
             </div>
-            
-            {totalPages > 1 && !loading && filteredMerchants.length > 0 && (
-              <div className="p-4 border-t border-ink-200/60 dark:border-ink-800/60 flex items-center justify-between bg-ink-50/50 dark:bg-ink-900/50">
-                <span className="text-xs text-ink-500">
-                  Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, totalItems)} of {totalItems}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1.5 rounded-lg border border-ink-200 dark:border-ink-800 text-xs font-medium hover:bg-ink-50 dark:hover:bg-ink-800 disabled:opacity-50 text-ink-700 dark:text-ink-300 bg-white dark:bg-ink-900"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-xs font-semibold px-2 text-ink-700 dark:text-ink-300">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 rounded-lg border border-ink-200 dark:border-ink-800 text-xs font-medium hover:bg-ink-50 dark:hover:bg-ink-800 disabled:opacity-50 text-ink-700 dark:text-ink-300 bg-white dark:bg-ink-900"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
           </motion.div>
         </>
       )}
@@ -863,6 +863,33 @@ export default function AdminMerchants() {
                 Confirm
               </button>
             </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Add Modal */}
+      {isAddModalOpen && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} className="bg-white/90 dark:bg-ink-950/90 backdrop-blur-2xl p-6 rounded-3xl max-w-md w-full border border-ink-200/50 dark:border-ink-800/50 shadow-2xl shadow-purple-900/20 space-y-5">
+            <div className="flex items-center justify-between border-b border-ink-200/50 dark:border-ink-800/50 pb-4">
+              <h3 className="font-display text-lg font-bold text-ink-900 dark:text-white">Manually Add Merchant</h3>
+              <button onClick={() => setIsAddModalOpen(false)} className="p-1 text-ink-400 hover:text-ink-600 dark:hover:text-white"><X className="h-5 w-5" /></button>
+            </div>
+            <form onSubmit={handleAddMerchantSubmit} className="space-y-4">
+              <div className="space-y-3">
+                <input type="text" required placeholder="Business Name" value={formData.businessName} onChange={(e) => setFormData({ ...formData, businessName: e.target.value })} className="input py-2 text-xs w-full" />
+                <input type="text" required placeholder="Owner Name" value={formData.merchantName} onChange={(e) => setFormData({ ...formData, merchantName: e.target.value })} className="input py-2 px-3 text-xs w-full" />
+                <input type="email" required placeholder="Email Address" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="input py-2 text-xs w-full" />
+                <input type="tel" required placeholder="Phone Number" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="input py-2 text-xs w-full" />
+                <input type="url" placeholder="Website URL" value={formData.website} onChange={(e) => setFormData({ ...formData, website: e.target.value })} className="input py-2 text-xs w-full" />
+              </div>
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-200/50 dark:border-ink-800/50">
+                <button type="button" onClick={() => setIsAddModalOpen(false)} className="btn-secondary py-2 px-4 text-xs font-semibold">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="bg-purple-600 text-white rounded-xl py-2 px-5 text-xs font-semibold flex gap-2 hover:bg-purple-500 transition-colors shadow-lg shadow-purple-500/20">
+                  {isSubmitting ? 'Creating...' : 'Create Merchant'}
+                </button>
+              </div>
+            </form>
           </motion.div>
         </motion.div>
       )}

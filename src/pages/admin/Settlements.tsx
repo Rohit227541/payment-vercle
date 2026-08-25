@@ -25,23 +25,14 @@ export default function AdminSettlements() {
     setLoading(true);
     setError(null);
     try {
-      const [sumRes, listRes] = await Promise.all([
-        apiFetch('/admin/settlements/summary', {}, true),
-        apiFetch(`/admin/settlements?page=${page}&limit=10${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`, {}, true),
-      ]);
-
-      if (sumRes.success) setSummary(sumRes.data);
-      else setSummary(null);
-
-      if (listRes.success) {
-        setSettlements(listRes.data?.settlements || (Array.isArray(listRes.data) ? listRes.data : []));
-        setTotalPages(listRes.data?.pagination?.total_pages || 1);
-      } else {
-        setSettlements([]);
-      }
+      // Admin Settlements API is not yet implemented in the backend.
+      // Settlements are distinct from wallets.
+      throw new Error('Settlement endpoints are not active in backend.');
     } catch (err: any) {
       console.error('Failed to load admin settlements:', err);
-      setError('Could not connect to settlements service.');
+      setError('Settlement functionality is currently unavailable (Pending Backend API).');
+      setSettlements([]);
+      setSummary(null);
     } finally {
       setLoading(false);
     }
