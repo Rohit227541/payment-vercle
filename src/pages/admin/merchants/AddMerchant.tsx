@@ -249,7 +249,7 @@ export default function AddMerchant() {
                         value={formData.businessName}
                         onChange={handleChange}
                         className="input pl-10 w-full"
-                        placeholder="e.g. Acme Corp Ltd"
+                        placeholder="e.g. Trustgates Corp Ltd"
                         required
                         minLength={3}
                       />

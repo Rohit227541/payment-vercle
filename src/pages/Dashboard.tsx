@@ -43,7 +43,7 @@ export default function Dashboard() {
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-600 to-accent-500 text-white">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="13" rx="3" /><path d="M7 11h6M7 14h4" /><circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none" /></svg>
             </span>
-            <span className="font-display text-sm font-bold text-ink-900 dark:text-white">PayFlow</span>
+            <span className="font-display text-sm font-bold text-ink-900 dark:text-white">Trustgates</span>
           </Link>
           <button onClick={() => setOpen(false)} className="lg:hidden text-ink-500"><X className="h-5 w-5" /></button>
         </div>

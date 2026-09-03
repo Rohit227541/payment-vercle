@@ -5,6 +5,7 @@ export interface ApiResponse<T = any> {
   message?: string;
   data?: T;
   error?: string;
+  pagination?: any;
 }
 
 // ==========================================================
@@ -24,7 +25,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
       localStorage.getItem('refresh_token');
 
     if (!refreshToken) {
-      console.error(
+      console.log(
         'No refresh token available.'
       );
 
@@ -35,8 +36,12 @@ const refreshAccessToken = async (): Promise<string | null> => {
       'Refreshing access token...'
     );
 
+    const isAdmin = localStorage.getItem('isAdmin') === 'true' || localStorage.getItem('role') === 'admin' || localStorage.getItem('admin_role') === 'admin';
+    const baseUrl = isAdmin ? API_BASE_URL.replace(/\/merchant\/?$/, '') : API_BASE_URL;
+    const refreshUrl = isAdmin ? `${baseUrl}/admin/refresh` : `${baseUrl}/refresh`;
+
     const response = await fetch(
-      `${API_BASE_URL}/refresh`,
+      refreshUrl,
       {
         method: 'POST',
 
@@ -59,7 +64,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
     if (!response.ok) {
 
-      console.error(
+      console.log(
         'Refresh failed:',
         data
       );
@@ -75,7 +80,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
     if (!newAccessToken) {
 
-      console.error(
+      console.log(
         'No new access token received.'
       );
 
@@ -86,31 +91,22 @@ const refreshAccessToken = async (): Promise<string | null> => {
     // SAVE NEW ACCESS TOKEN
     // ======================================================
 
-    localStorage.setItem(
-      'accessToken',
-      newAccessToken
-    );
-
-    localStorage.setItem(
-      'token',
-      newAccessToken
-    );
+    localStorage.setItem('accessToken', newAccessToken);
+    localStorage.setItem('token', newAccessToken);
+    if (isAdmin) {
+      localStorage.setItem('adminToken', newAccessToken);
+    }
 
     // ======================================================
     // SAVE ROTATED REFRESH TOKEN
     // ======================================================
 
     if (newRefreshToken) {
-
-      localStorage.setItem(
-        'refreshToken',
-        newRefreshToken
-      );
-
-      localStorage.setItem(
-        'refresh_token',
-        newRefreshToken
-      );
+      localStorage.setItem('refreshToken', newRefreshToken);
+      localStorage.setItem('refresh_token', newRefreshToken);
+      if (isAdmin) {
+        localStorage.setItem('adminRefreshToken', newRefreshToken);
+      }
     }
 
     console.log(
@@ -121,7 +117,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
   } catch (error) {
 
-    console.error(
+    console.log(
       'Refresh token error:',
       error
     );
@@ -231,6 +227,8 @@ export async function apiFetch<T = any>(
 
       data:
         data?.data ?? data,
+        
+      pagination: data?.pagination,
     };
   }
 
@@ -270,31 +268,20 @@ export async function apiFetch<T = any>(
 
   if (!newAccessToken) {
 
-    console.error(
+    console.log(
       'Token refresh failed. Logging out.'
     );
 
-    localStorage.removeItem(
-      'accessToken'
-    );
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('refresh_token');
 
-    localStorage.removeItem(
-      'token'
-    );
-
-    localStorage.removeItem(
-      'refreshToken'
-    );
-
-    localStorage.removeItem(
-      'refresh_token'
-    );
+    window.location.href = isAdmin ? '/admin/login' : '/login';
 
     return {
       success: false,
-
-      message:
-        'Session expired. Please login again.',
+      message: 'Session expired. Please login again.',
     };
   }
 
@@ -343,5 +330,7 @@ export async function apiFetch<T = any>(
 
     data:
       data?.data ?? data,
+      
+    pagination: data?.pagination,
   };
 }

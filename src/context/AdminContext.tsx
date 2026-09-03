@@ -102,7 +102,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           body: JSON.stringify({ refreshToken: currentRefreshToken })
         });
       } catch (err) {
-        console.error("Admin logout API error:", err);
+        console.log("Admin logout API error:", err);
       }
     }
 

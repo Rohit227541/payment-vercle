@@ -341,7 +341,7 @@ export default function MerchantCharges() {
 
     } catch (err) {
 
-      console.error(
+      console.log(
         "Merchant Fees API Error:",
         err
       );

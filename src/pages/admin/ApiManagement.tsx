@@ -98,7 +98,7 @@ export default function AdminApiManagement() {
           merchantId: m.merchantId || idx + 1,
           businessName: m.businessName || m.merchantName || 'Merchant Store',
           merchantName: m.merchantName || 'Merchant User',
-          email: m.email || `merchant${m.merchantId}@payflow.io`,
+          email: m.email || `merchant${m.merchantId}@trustgates.io`,
           apiKey: m.apiKey || `pk_live_${Math.random().toString(36).substring(2, 12)}`,
           secretKey: m.secretKey || `sk_live_${Math.random().toString(36).substring(2, 18)}`,
           webhookUrl: m.webhookUrl || 'https://merchant.domain/api/webhook',
@@ -112,7 +112,7 @@ export default function AdminApiManagement() {
         setError('No merchant API credentials found');
       }
     } catch (err: any) {
-      console.error('Fetch Admin API Credentials error:', err);
+      console.log('Fetch Admin API Credentials error:', err);
       setError(err.response?.data?.message || 'Failed to load credentials');
       setCredentials([]);
     } finally {

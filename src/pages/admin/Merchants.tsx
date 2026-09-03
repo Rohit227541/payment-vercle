@@ -80,7 +80,7 @@ export default function AdminMerchants() {
     isOpen: false,
     title: '',
     message: '',
-    action: () => {},
+    action: () => { },
     type: 'info'
   });
 
@@ -124,7 +124,7 @@ export default function AdminMerchants() {
         setData([]);
       }
     } catch (err) {
-      console.error('Failed to fetch merchants:', err);
+      (() => { })('Failed to fetch merchants:', err);
       setError(true);
       setData([]);
     } finally {
@@ -179,7 +179,7 @@ export default function AdminMerchants() {
           website: editFormData.website,
         }),
       }, true);
-      
+
       if (!res.success) throw new Error(res.message || 'Failed to update merchant');
 
       alert(`Merchant updated successfully!`);
@@ -342,25 +342,28 @@ export default function AdminMerchants() {
     loadMerchants();
   }, []);
 
-  const getDocUrl = (path: string) => {
-    if (!path) return '#';
-    if (path.startsWith('http')) return path;
-    
-    // The backend database often stores only the filename (e.g. pan_32_abc.png).
-    // The static files are served at /uploads/kyc/ by the backend.
-    const normalizedPath = path.replace(/^\/+/, '');
-    const fullPath = normalizedPath.startsWith('uploads/') 
-      ? normalizedPath 
-      : `uploads/kyc/${normalizedPath}`;
-      
-    // Handle the case where API_BASE_URL contains a path (like /merchant)
-    // We need to fetch from the root of the API server (e.g., https://api.trustgates.co.in/uploads/kyc/...)
+  const handleViewDocument = async (merchantId: string, docType: string) => {
     try {
-      const url = new URL(API_BASE_URL);
-      return `${url.origin}/${fullPath}`;
-    } catch (e) {
-      // Fallback if API_BASE_URL is relative
-      return `${API_BASE_URL.replace(/\/+$/, '')}/${fullPath}`;
+      const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+      const baseUrl = API_BASE_URL.replace(/\/merchant\/?$/, ''); 
+      const url = `${baseUrl}/admin/view-kyc/${merchantId}/${docType}`;
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load document');
+      }
+
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      window.open(objectUrl, '_blank');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to load document. It may not exist or you lack permissions.');
     }
   };
 
@@ -368,11 +371,11 @@ export default function AdminMerchants() {
     setCurrentPage(1);
   }, [searchQuery, statusFilter]);
 
-  const filteredMerchants = data ? data.filter(m => 
+  const filteredMerchants = data ? data.filter(m =>
     (statusFilter === 'ALL' || m.accountStatus === statusFilter) &&
-    (m.merchantId.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     m.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     m.businessName.toLowerCase().includes(searchQuery.toLowerCase()))
+    (m.merchantId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.businessName.toLowerCase().includes(searchQuery.toLowerCase()))
   ) : [];
 
   const totalItems = filteredMerchants.length;
@@ -471,7 +474,7 @@ export default function AdminMerchants() {
           </div>
 
           {/* Merchants Table */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -503,48 +506,45 @@ export default function AdminMerchants() {
                       <td className="px-5 py-3.5 whitespace-nowrap space-y-1">
                         <div>
                           <span className="text-[10px] uppercase text-ink-400 mr-2 inline-block w-14">KYC</span>
-                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${
-                            m.kycStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' : 
-                            m.kycStatus === 'REJECTED' ? 'bg-rose-500/10 text-rose-600' :
-                            'bg-amber-500/10 text-amber-600'
-                          }`}>{m.kycStatus}</span>
+                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${m.kycStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' :
+                              m.kycStatus === 'REJECTED' ? 'bg-rose-500/10 text-rose-600' :
+                                'bg-amber-500/10 text-amber-600'
+                            }`}>{m.kycStatus}</span>
                         </div>
                         <div>
                           <span className="text-[10px] uppercase text-ink-400 mr-2 inline-block w-14">Apprv.</span>
-                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${
-                            m.approvalStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
-                          }`}>{m.approvalStatus}</span>
+                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${m.approvalStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                            }`}>{m.approvalStatus}</span>
                         </div>
                         <div>
                           <span className="text-[10px] uppercase text-ink-400 mr-2 inline-block w-14">Acct.</span>
-                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${
-                            m.accountStatus === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                          }`}>{m.accountStatus}</span>
+                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-bold ${m.accountStatus === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                            }`}>{m.accountStatus}</span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-2">
-                          <motion.button 
+                          <motion.button
                             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                            onClick={() => loadMerchantDetails(m.merchantId)} 
+                            onClick={() => loadMerchantDetails(m.merchantId)}
                             className="p-2 rounded-xl bg-purple-500/10 text-purple-600 hover:bg-purple-500/20 transition-colors"
                             title="View Details & KYC"
                           >
                             <Eye className="h-4 w-4" />
                           </motion.button>
-                          
-                          <motion.button 
+
+                          <motion.button
                             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                            onClick={() => openEditModal(m)} 
+                            onClick={() => openEditModal(m)}
                             className="p-2 rounded-xl bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
                             title="Edit Merchant"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>
-                          
-                          <motion.button 
+
+                          <motion.button
                             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                            onClick={() => confirmDelete(m.merchantId, m.businessName)} 
+                            onClick={() => confirmDelete(m.merchantId, m.businessName)}
                             className="p-2 rounded-xl bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 transition-colors ml-1"
                             title="Delete Merchant"
                           >
@@ -557,7 +557,7 @@ export default function AdminMerchants() {
                 </tbody>
               </table>
             </div>
-            
+
             {totalPages > 1 && !loading && filteredMerchants.length > 0 && (
               <div className="p-4 border-t border-ink-200/60 dark:border-ink-800/60 flex items-center justify-between bg-ink-50/50 dark:bg-ink-900/50">
                 <span className="text-xs text-ink-500">
@@ -591,11 +591,11 @@ export default function AdminMerchants() {
       {/* Merchant Details & KYC Modal */}
       <AnimatePresence>
         {isDetailsModalOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm overflow-y-auto"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="bg-white/90 dark:bg-ink-950/90 backdrop-blur-2xl rounded-2xl w-full max-w-4xl border border-ink-200/50 dark:border-ink-800/50 shadow-2xl shadow-purple-900/10 flex flex-col max-h-[90vh] overflow-hidden"
@@ -606,7 +606,7 @@ export default function AdminMerchants() {
                 </h3>
                 <button onClick={() => setIsDetailsModalOpen(false)} className="p-1.5 text-ink-400 hover:bg-ink-200 dark:hover:bg-ink-800 rounded-lg transition"><X className="h-5 w-5" /></button>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto">
                 {detailsLoading ? (
                   <div className="flex flex-col items-center justify-center py-32 space-y-4">
@@ -622,20 +622,20 @@ export default function AdminMerchants() {
                   <div className="flex flex-col md:flex-row h-full">
                     {/* Sidebar Tabs */}
                     <div className="w-full md:w-48 shrink-0 border-b md:border-b-0 md:border-r border-ink-200 dark:border-ink-800 p-4 space-y-1 bg-ink-50/30 dark:bg-ink-900/30">
-                      <button 
-                        onClick={() => setActiveTab('business')} 
+                      <button
+                        onClick={() => setActiveTab('business')}
                         className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'business' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400' : 'text-ink-600 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800'}`}
                       >
                         <Building className="h-4 w-4" /> Business Info
                       </button>
-                      <button 
-                        onClick={() => setActiveTab('kyc')} 
+                      <button
+                        onClick={() => setActiveTab('kyc')}
                         className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'kyc' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400' : 'text-ink-600 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800'}`}
                       >
                         <Shield className="h-4 w-4" /> KYC Docs
                       </button>
-                      <button 
-                        onClick={() => setActiveTab('api')} 
+                      <button
+                        onClick={() => setActiveTab('api')}
                         className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'api' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400' : 'text-ink-600 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800'}`}
                       >
                         <Key className="h-4 w-4" /> API Keys
@@ -644,36 +644,32 @@ export default function AdminMerchants() {
 
                     {/* Tab Content */}
                     <div className="p-5 md:p-6 flex-1 bg-white dark:bg-ink-950 overflow-y-auto">
-                      
+
                       {activeTab === 'business' && (
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                           {/* Status Badges */}
                           <div className="flex flex-wrap gap-3 p-4 bg-ink-50 dark:bg-ink-900/50 rounded-xl border border-ink-200/50 dark:border-ink-800/50">
                             <div className="flex-1 min-w-[120px]">
                               <p className="text-xs text-ink-500 mb-1">Account Status</p>
-                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
-                                merchantDetails.merchant.accountStatus === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
-                              }`}>{merchantDetails.merchant.accountStatus}</span>
+                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${merchantDetails.merchant.accountStatus === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                                }`}>{merchantDetails.merchant.accountStatus}</span>
                             </div>
                             <div className="flex-1 min-w-[120px]">
                               <p className="text-xs text-ink-500 mb-1">Approval Status</p>
-                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
-                                merchantDetails.merchant.approvalStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
-                              }`}>{merchantDetails.merchant.approvalStatus}</span>
+                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${merchantDetails.merchant.approvalStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                                }`}>{merchantDetails.merchant.approvalStatus}</span>
                             </div>
                             <div className="flex-1 min-w-[120px]">
                               <p className="text-xs text-ink-500 mb-1">KYC Status</p>
-                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
-                                merchantDetails.merchant.kycStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' :
-                                merchantDetails.merchant.kycStatus === 'REJECTED' ? 'bg-rose-500/10 text-rose-600' :
-                                'bg-amber-500/10 text-amber-600'
-                              }`}>{merchantDetails.merchant.kycStatus}</span>
+                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${merchantDetails.merchant.kycStatus === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600' :
+                                  merchantDetails.merchant.kycStatus === 'REJECTED' ? 'bg-rose-500/10 text-rose-600' :
+                                    'bg-amber-500/10 text-amber-600'
+                                }`}>{merchantDetails.merchant.kycStatus}</span>
                             </div>
                             <div className="flex-1 min-w-[120px]">
                               <p className="text-xs text-ink-500 mb-1">Email Verified</p>
-                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
-                                merchantDetails.merchant.emailVerified ? 'bg-emerald-500/10 text-emerald-600' : 'bg-rose-500/10 text-rose-600'
-                              }`}>{merchantDetails.merchant.emailVerified ? 'VERIFIED' : 'PENDING'}</span>
+                              <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${merchantDetails.merchant.emailVerified ? 'bg-emerald-500/10 text-emerald-600' : 'bg-rose-500/10 text-rose-600'
+                                }`}>{merchantDetails.merchant.emailVerified ? 'VERIFIED' : 'PENDING'}</span>
                             </div>
                           </div>
 
@@ -726,23 +722,23 @@ export default function AdminMerchants() {
                                     <p className="font-mono text-sm text-ink-600 dark:text-ink-300">{merchantDetails.kyc.pan_number}</p>
                                   </div>
                                   {merchantDetails.kyc.pan_document ? (
-                                    <a href={getDocUrl(merchantDetails.kyc.pan_document)} target="_blank" rel="noreferrer" className="btn-secondary py-2 px-4 text-xs">
+                                    <button onClick={() => handleViewDocument(merchantDetails.merchant.merchantId, 'pan')} className="btn-secondary py-2 px-4 text-xs">
                                       <FileText className="h-4 w-4 text-purple-500" /> View Document
-                                    </a>
+                                    </button>
                                   ) : (
                                     <span className="text-xs text-ink-400 italic">Not uploaded</span>
                                   )}
                                 </div>
-                                
+
                                 <div className="p-5 bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-700 shadow-sm flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between">
                                   <div>
                                     <h5 className="font-bold text-sm text-ink-900 dark:text-white flex items-center gap-2 mb-1">Aadhaar Details</h5>
                                     <p className="font-mono text-sm text-ink-600 dark:text-ink-300">{merchantDetails.kyc.aadhaar_number}</p>
                                   </div>
                                   {merchantDetails.kyc.aadhaar_document ? (
-                                    <a href={getDocUrl(merchantDetails.kyc.aadhaar_document)} target="_blank" rel="noreferrer" className="btn-secondary py-2 px-4 text-xs">
+                                    <button onClick={() => handleViewDocument(merchantDetails.merchant.merchantId, 'aadhaar')} className="btn-secondary py-2 px-4 text-xs">
                                       <FileText className="h-4 w-4 text-purple-500" /> View Document
-                                    </a>
+                                    </button>
                                   ) : (
                                     <span className="text-xs text-ink-400 italic">Not uploaded</span>
                                   )}
@@ -752,35 +748,35 @@ export default function AdminMerchants() {
                               {/* KYC Actions */}
                               <div className="p-5 bg-ink-50 dark:bg-ink-900/50 rounded-2xl border border-ink-200/50 dark:border-ink-800/50">
                                 <h5 className="font-bold text-sm text-ink-900 dark:text-white mb-4">Admin Action Console</h5>
-                                
+
                                 <div className="space-y-4">
                                   <div>
                                     <label className="block text-xs font-semibold text-ink-700 dark:text-ink-300 mb-2">Verification Notes</label>
-                                    <textarea 
+                                    <textarea
                                       value={verificationNotes}
                                       onChange={(e) => setVerificationNotes(e.target.value)}
-                                      className="input w-full text-sm py-3" 
+                                      className="input w-full text-sm py-3"
                                       placeholder="Provide context for approval, rejection, or resubmission request..."
                                       rows={2}
                                     />
                                   </div>
-                                  
+
                                   <div className="flex flex-wrap gap-2 pt-2">
-                                    <button 
+                                    <button
                                       onClick={() => confirmKycAction(merchantDetails.merchant.merchantId, 'Approve', () => verifyMerchantKyc(merchantDetails.merchant.merchantId, 'APPROVED'))}
                                       disabled={merchantDetails.merchant.kycStatus === 'APPROVED'}
                                       className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-2 px-5 text-xs font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                       Approve
                                     </button>
-                                    <button 
+                                    <button
                                       onClick={() => confirmKycAction(merchantDetails.merchant.merchantId, 'Reject', () => verifyMerchantKyc(merchantDetails.merchant.merchantId, 'REJECTED'))}
                                       disabled={merchantDetails.merchant.kycStatus === 'REJECTED'}
                                       className="bg-rose-600 hover:bg-rose-500 text-white rounded-xl py-2 px-5 text-xs font-bold shadow-lg shadow-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                       Reject
                                     </button>
-                                    <button 
+                                    <button
                                       onClick={() => confirmKycAction(merchantDetails.merchant.merchantId, 'Allow Resubmission', () => allowKycResubmission(merchantDetails.merchant.merchantId))}
                                       disabled={merchantDetails.kyc.kyc_resubmission_allowed === 1}
                                       className="bg-amber-500 hover:bg-amber-400 text-white rounded-xl py-2 px-5 text-xs font-bold shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
@@ -788,7 +784,7 @@ export default function AdminMerchants() {
                                       Request Resubmission
                                     </button>
                                   </div>
-                                  
+
                                   {merchantDetails.kyc.verification_notes && (
                                     <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl">
                                       <p className="text-xs font-bold text-amber-800 dark:text-amber-400 mb-1">Previous Admin Notes:</p>
@@ -842,11 +838,10 @@ export default function AdminMerchants() {
       {confirmModal.isOpen && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white/90 dark:bg-ink-950/90 backdrop-blur-2xl p-8 rounded-3xl max-w-md w-full border border-ink-200/50 dark:border-ink-800/50 shadow-2xl shadow-purple-900/20 space-y-5 text-center">
-            <div className={`mx-auto grid h-12 w-12 place-items-center rounded-full ${
-              confirmModal.type === 'danger' ? 'bg-rose-500/10 text-rose-500' :
-              confirmModal.type === 'warning' ? 'bg-amber-500/10 text-amber-500' :
-              'bg-purple-500/10 text-purple-500'
-            }`}>
+            <div className={`mx-auto grid h-12 w-12 place-items-center rounded-full ${confirmModal.type === 'danger' ? 'bg-rose-500/10 text-rose-500' :
+                confirmModal.type === 'warning' ? 'bg-amber-500/10 text-amber-500' :
+                  'bg-purple-500/10 text-purple-500'
+              }`}>
               <AlertCircle className="h-6 w-6" />
             </div>
             <div>
@@ -855,11 +850,10 @@ export default function AdminMerchants() {
             </div>
             <div className="flex items-center justify-center gap-3 pt-4">
               <button onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))} className="btn-secondary py-2 px-4 text-xs font-semibold">Cancel</button>
-              <button onClick={confirmModal.action} className={`rounded-xl py-2 px-5 text-xs font-semibold text-white shadow-lg transition ${
-                confirmModal.type === 'danger' ? 'bg-rose-600 hover:bg-rose-500 shadow-rose-500/20' :
-                confirmModal.type === 'warning' ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-500/20' :
-                'bg-purple-600 hover:bg-purple-500 shadow-purple-500/20'
-              }`}>
+              <button onClick={confirmModal.action} className={`rounded-xl py-2 px-5 text-xs font-semibold text-white shadow-lg transition ${confirmModal.type === 'danger' ? 'bg-rose-600 hover:bg-rose-500 shadow-rose-500/20' :
+                  confirmModal.type === 'warning' ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-500/20' :
+                    'bg-purple-600 hover:bg-purple-500 shadow-purple-500/20'
+                }`}>
                 Confirm
               </button>
             </div>

@@ -86,7 +86,7 @@ export default function MerchantReports() {
         setData(mockSettlements);
         setTotalPages(1);
       } catch (err) {
-        console.error("Failed to load mock reports:", err);
+        console.log("Failed to load mock reports:", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -123,7 +123,7 @@ export default function MerchantReports() {
         throw new Error(result.message || "Failed to fetch settlements");
       }
     } catch (err) {
-      console.error("Fetch Settlements Error:", err);
+      console.log("Fetch Settlements Error:", err);
       setError(true);
     } finally {
       setLoading(false);

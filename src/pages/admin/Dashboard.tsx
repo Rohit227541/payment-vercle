@@ -127,7 +127,7 @@ export default function AdminDashboard() {
         setError(true);
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setError(true);
     } finally {
       setLoading(false);

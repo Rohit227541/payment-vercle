@@ -350,7 +350,7 @@ export default function Payout() {
 
     } catch (err: any) {
 
-      console.error(
+      console.log(
         "Payout Analytics Error:",
         err
       );

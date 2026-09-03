@@ -28,7 +28,7 @@ const resources = [
 export default function Developers() {
   return (
     <>
-      <PageHero eyebrow="Developers" title={<>Build with <span className="gradient-text">PayFlow</span></>} subtitle="Clean APIs, official SDKs, reliable webhooks and a sandbox that just works." />
+      <PageHero eyebrow="Developers" title={<>Build with <span className="gradient-text">Trustgates</span></>} subtitle="Clean APIs, official SDKs, reliable webhooks and a sandbox that just works." />
 
       <section className="section">
         <div className="container-px">

@@ -51,17 +51,17 @@ export default function AdminLogin() {
 
       navigate('/admin/dashboard', { replace: true });
     } catch (err: any) {
-      console.error('Admin Login Error:', err);
+      console.log('Admin Login Error:', err);
     }
   };
 
   return (
     <AuthShell
       title="Admin Portal Login"
-      subtitle="Authorized access only. Sign in to PayFlow administrative console."
+      subtitle="Authorized access only. Sign in to Trustgates administrative console."
       footer={
         <p className="text-xs text-ink-400 text-center">
-          Super Admin Console • PayFlow Operations & Audit Control
+          Super Admin Console • Trustgates Operations & Audit Control
         </p>
       }
     >

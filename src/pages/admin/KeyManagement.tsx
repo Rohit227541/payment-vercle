@@ -126,7 +126,7 @@ export default function KeyManagement() {
             merchantId: mId || 0,
             businessName: m.businessName || m.business_name || m.merchantName || m.merchant_name || 'Merchant Store',
             merchantName: m.merchantName || m.merchant_name || 'Merchant User',
-            email: m.email || `merchant${mId}@payflow.io`,
+            email: m.email || `merchant${mId}@trustgates.io`,
             apiKey: realApiKey,
             secretKey: realSecretKey,
             webhookUrl: realWebhookUrl,
@@ -143,7 +143,7 @@ export default function KeyManagement() {
         setError('No merchant API credentials found');
       }
     } catch (err: any) {
-      console.error('Fetch Admin API Credentials error:', err);
+      console.log('Fetch Admin API Credentials error:', err);
       setError(err.message || 'Failed to load credentials');
       setCredentials([]);
     } finally {

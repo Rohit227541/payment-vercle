@@ -43,7 +43,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
     if (!refreshToken) {
 
-      console.error(
+      console.log(
         "No refresh token available."
       );
 
@@ -82,7 +82,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
       !data?.accessToken
     ) {
 
-      console.error(
+      console.log(
         "Invalid refresh response:",
         data
       );
@@ -135,7 +135,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
   } catch (error) {
 
-    console.error(
+    console.log(
       "Refresh token failed:",
       error
     );
@@ -230,7 +230,7 @@ api.interceptors.response.use(
 
     if (originalRequest._retry) {
 
-      console.error(
+      console.log(
         "Request failed again after token refresh."
       );
 
@@ -263,7 +263,7 @@ api.interceptors.response.use(
 
     if (!newAccessToken) {
 
-      console.error(
+      console.log(
         "Session expired. Refresh token is invalid or expired."
       );
 

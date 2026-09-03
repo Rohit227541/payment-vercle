@@ -12,6 +12,7 @@ import {
   AlertCircle,
   RefreshCw,
   CreditCard,
+  Send,
   Building,
   Smartphone,
   Wallet as WalletIcon,
@@ -282,7 +283,7 @@ export default function MerchantRefunds() {
       setTotalPages(1);
       setTotalRecords(0);
     } catch (err: any) {
-      console.warn('Direct fetch Refunds error:', err);
+      console.log('Direct fetch Refunds error:', err);
       setRefunds([]);
       setTotalPages(1);
       setTotalRecords(0);
@@ -302,7 +303,7 @@ export default function MerchantRefunds() {
         setAnalytics(getDefaultAnalyticsData());
       }
     } catch (err) {
-      console.warn('Analytics fetch fallback:', err);
+      console.log('Analytics fetch fallback:', err);
       setAnalytics(getDefaultAnalyticsData());
     } finally {
       setAnalyticsLoading(false);
@@ -486,7 +487,7 @@ export default function MerchantRefunds() {
       );
       fetchAnalytics();
     } catch (err) {
-      console.warn('Backend approve fallback:', err);
+      console.log('Backend approve fallback:', err);
       setRefunds((prev) =>
         prev.map((r) =>
           r.refund_id === row.refund_id

@@ -126,7 +126,7 @@ export default function Signup() {
 
       navigate("/verify-email");
     } catch (err: any) {
-      console.error(err);
+      console.log(err);
       alert(err.message || "Something went wrong");
     }
   };
@@ -205,7 +205,7 @@ export default function Signup() {
               <input
                 id="businessName"
                 type="text"
-                placeholder="Acme Corp"
+                placeholder="Trustgates Corp"
                 className={`input pl-11 py-3 text-sm ${
                   errors.businessName
                     ? "border-rose-500 focus:ring-rose-500/20 focus:border-rose-500"

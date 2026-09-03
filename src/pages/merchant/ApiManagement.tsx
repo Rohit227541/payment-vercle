@@ -93,7 +93,7 @@ export default function ApiManagement() {
         setCredentials([]);
       }
     } catch (err: any) {
-      console.error('API Credentials fetch error:', err);
+      console.log('API Credentials fetch error:', err);
       setError('Failed to load API credentials.');
       setCredentials([]);
     } finally {
@@ -122,7 +122,7 @@ export default function ApiManagement() {
         setWhitelistedIps([]);
       }
     } catch (err) {
-      console.error('No whitelisted IPs loaded:', err);
+      console.log('No whitelisted IPs loaded:', err);
     }
   };
 

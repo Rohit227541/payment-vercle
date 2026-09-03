@@ -216,7 +216,7 @@ export default function MerchantLayout() {
               </span>
 
               <span className="font-display text-base font-bold text-ink-900 dark:text-white">
-                PayFlow{' '}
+                Trustgates{' '}
 
                 <span className="text-xs text-brand-500 font-semibold px-1 py-0.5 rounded bg-brand-500/10 ml-1">
                   Merchant

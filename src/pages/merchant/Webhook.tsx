@@ -54,7 +54,7 @@ export default function MerchantWebhook() {
         setWebhooks(Array.isArray(res.data) ? res.data : []);
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setError('Failed to load webhooks.');
     } finally {
       setLoading(false);
@@ -66,10 +66,10 @@ export default function MerchantWebhook() {
     try {
       const res = await getWebhookLogs(50, 0);
       if (res.success) {
-        setLogs(Array.isArray(res.data?.logs) ? res.data.logs : []);
+        setLogs(Array.isArray(res.data) ? res.data : []);
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
     } finally {
       setLogsLoading(false);
     }
@@ -469,21 +469,21 @@ export default function MerchantWebhook() {
                     <td className="py-3 px-4">{new Date(log.createdAt).toLocaleString()}</td>
                     <td className="py-3 px-4">
                       <span className="bg-ink-100 dark:bg-ink-800 text-ink-900 dark:text-white px-2 py-0.5 rounded text-[10px] font-bold">
-                        {log.eventType}
+                        {log.event}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      {log.deliveryStatus === 'SUCCESS' ? (
+                      {log.status === 'SUCCESS' ? (
                         <span className="text-emerald-500 flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5"/> Success</span>
-                      ) : log.deliveryStatus === 'FAILED' ? (
+                      ) : log.status === 'FAILED' ? (
                         <span className="text-rose-500 flex items-center gap-1"><AlertCircle className="h-3.5 w-3.5"/> Failed</span>
                       ) : (
                         <span className="text-amber-500 flex items-center gap-1"><Clock className="h-3.5 w-3.5"/> Pending</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 font-bold">{log.responseCode || '-'}</td>
+                    <td className="py-3 px-4 font-bold">{log.responseStatusCode || '-'}</td>
                     <td className="py-3 px-4 text-right">
-                      {log.deliveryStatus === 'FAILED' && (
+                      {log.status === 'FAILED' && (
                         <button
                           onClick={() => handleRetryLog(log.logId)}
                           className="px-3 py-1 rounded-lg text-[11px] font-semibold bg-brand-500/10 text-brand-600 hover:bg-brand-500/20 transition flex items-center gap-1 ml-auto"

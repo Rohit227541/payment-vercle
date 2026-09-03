@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Download, RefreshCw, FileText, AlertCircle, Search, Store, Calendar, TrendingUp } from 'lucide-react';
+import { Download, RefreshCw, FileText, AlertCircle, Search, Store, Calendar, TrendingUp, DollarSign, ArrowUpRight, FileSpreadsheet } from 'lucide-react';
 import { apiFetch } from '../../../services/api.service';
+import { API_BASE_URL2 } from '../../../config';
 
 interface MerchantSummary {
   merchant_id: string;
@@ -60,16 +61,29 @@ export default function MerchantReports() {
     if (!searchTrigger) return;
     setExportLoading(true);
     try {
-      const res = await apiFetch(`/admin/report/merchant/export`, {
+      const response = await fetch(`${API_BASE_URL2}/admin/report/merchant/export`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('adminToken') || localStorage.getItem('accessToken')}`
+        },
         body: JSON.stringify({ merchantId: searchTrigger, startDate, endDate })
-      }, true);
+      });
       
-      if (res.success && res.data?.downloadUrl) {
-        window.open(res.data.downloadUrl, '_blank');
-      } else {
-        alert(res.message || 'Export failed.');
+      if (!response.ok) {
+        alert('Export failed.');
+        return;
       }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `merchant_report_${searchTrigger}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err: any) {
       alert(err.message || 'Export error.');
     } finally {

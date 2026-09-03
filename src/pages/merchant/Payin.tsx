@@ -258,7 +258,7 @@ export default function MerchantPayin() {
 
     } catch (err: any) {
 
-      console.error(
+      console.log(
         'Failed to load payin metrics:',
         err
       );
@@ -324,7 +324,7 @@ export default function MerchantPayin() {
 
       } catch (err) {
 
-        console.error(
+        console.log(
           'Failed to load mock transactions:',
           err
         );
@@ -598,7 +598,7 @@ export default function MerchantPayin() {
 
     } catch (err: any) {
 
-      console.error(
+      console.log(
         'Failed to load transactions:',
         err
       );

@@ -54,7 +54,7 @@ export default function AdminPaymentMethods() {
       if (anaRes.success) setAnalyticsData(anaRes.data);
       else setAnalyticsData(null);
     } catch (err: any) {
-      console.error(`Failed to fetch ${tab} payment method data:`, err);
+      console.log(`Failed to fetch ${tab} payment method data:`, err);
       setError(`Could not load ${tab.toUpperCase()} analytics data.`);
     } finally {
       setLoading(false);

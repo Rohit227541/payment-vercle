@@ -26,6 +26,7 @@ import { useAdmin } from "../context/AdminContext";
 const navItems = [
   { path: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/admin/wallet", icon: Wallet, label: "Admin Wallet" },
+  { path: "/admin/fee-management", icon: Percent, label: "Fee Management" },
   {
     label: "Transaction API",
     icon: CreditCard,
@@ -217,7 +218,7 @@ export default function AdminLayout() {
                 </svg>
               </span>
               <span className="font-display text-base font-bold text-ink-900 dark:text-white">
-                PayFlow{" "}
+                Trustgates{" "}
                 <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold px-1 py-0.5 rounded bg-purple-500/10 ml-1">
                   Admin
                 </span>

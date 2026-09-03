@@ -1189,7 +1189,7 @@ export const MerchantProvider: React.FC<{
 
     } catch (err) {
 
-      console.error(
+      console.log(
         'Logout API Error:',
         err
       );

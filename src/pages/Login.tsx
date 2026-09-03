@@ -248,7 +248,7 @@ export default function Login() {
       });
 
     } catch (err: any) {
-      console.error(
+      console.log(
         'Login failed:',
         err
       );
@@ -258,10 +258,10 @@ export default function Login() {
   return (
     <AuthShell
       title="Merchant Login"
-      subtitle="Welcome back. Sign in to your PayFlow dashboard."
+      subtitle="Welcome back. Sign in to your Trustgates dashboard."
       footer={
         <>
-          New to PayFlow?{' '}
+          New to Trustgates?{' '}
           <Link
             to="/signup"
             className="font-semibold text-brand-600 dark:text-brand-300 hover:underline"

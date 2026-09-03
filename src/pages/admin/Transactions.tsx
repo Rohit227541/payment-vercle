@@ -90,7 +90,7 @@ export default function AdminTransactions({ title = "System Transactions", endpo
         setData([]);
       }
     } catch (err) {
-      console.error('Failed to load transactions:', err);
+      console.log('Failed to load transactions:', err);
       setError(true);
       setData([]);
     } finally {

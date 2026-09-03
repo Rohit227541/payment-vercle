@@ -122,6 +122,7 @@ export interface RefundRequestRow {
   paymentMethod?: string;
   orderId?: string;
   isSaving?: boolean;
+  isSubmittedLocked?: boolean;
   refund?: {
     refundId?: number | string;
     gatewayRefundId?: string;
@@ -229,7 +230,7 @@ export default function RefundRequest() {
           }
         }
       } catch (err) {
-        console.warn('Could not fetch direct requests with API keys:', err);
+        console.log('Could not fetch direct requests with API keys:', err);
       }
 
       if (analyticsRes && analyticsRes.success && analyticsRes.data) {
@@ -239,7 +240,7 @@ export default function RefundRequest() {
       const combinedList: RefundRequestRow[] = [];
 
       // Read local persistent approvals state so submissions stay permanently locked across page refreshes
-      const savedApprovals = JSON.parse(localStorage.getItem('payflow_merchant_approved_refunds') || '{}');
+      const savedApprovals = JSON.parse(localStorage.getItem('trustgates_merchant_approved_refunds') || '{}');
 
       // Combine from /api/refund/requests (API Route: Backend/src/routes/refund/request.routes.js)
       if (directRequests && (directRequests as any).success && (directRequests as any).data) {
@@ -328,7 +329,7 @@ export default function RefundRequest() {
         setRequests([]);
       }
     } catch (err: any) {
-      console.warn('Backend refund API dynamic sync error:', err);
+      console.log('Backend refund API dynamic sync error:', err);
       setRequests([]);
     } finally {
       setLoading(false);
@@ -404,12 +405,12 @@ export default function RefundRequest() {
         approvedAmount: amountNum,
         remarks
       }).catch((err) => {
-        console.warn('Backend patch response handled:', err);
+        console.log('Backend patch response handled:', err);
       });
 
       // Save to permanent storage so it stays locked even after page refresh
       try {
-        const savedApprovals = JSON.parse(localStorage.getItem('payflow_merchant_approved_refunds') || '{}');
+        const savedApprovals = JSON.parse(localStorage.getItem('trustgates_merchant_approved_refunds') || '{}');
         savedApprovals[String(row.requestId)] = {
           approvedAmount: amountNum,
           remarks,
@@ -420,7 +421,7 @@ export default function RefundRequest() {
         if (row.requestReference) {
           savedApprovals[row.requestReference] = savedApprovals[String(row.requestId)];
         }
-        localStorage.setItem('payflow_merchant_approved_refunds', JSON.stringify(savedApprovals));
+        localStorage.setItem('trustgates_merchant_approved_refunds', JSON.stringify(savedApprovals));
       } catch (e) {}
 
       setActionMessage({
@@ -485,12 +486,12 @@ export default function RefundRequest() {
         remarks,
         reason: row.reason
       }).catch((err) => {
-        console.warn('Backend reject response handled:', err);
+        console.log('Backend reject response handled:', err);
       });
 
       // Save to permanent storage so rejection stays locked on refresh
       try {
-        const savedApprovals = JSON.parse(localStorage.getItem('payflow_merchant_approved_refunds') || '{}');
+        const savedApprovals = JSON.parse(localStorage.getItem('trustgates_merchant_approved_refunds') || '{}');
         savedApprovals[String(row.requestId)] = {
           status: 'REJECTED',
           remarks,
@@ -499,7 +500,7 @@ export default function RefundRequest() {
         if (row.requestReference) {
           savedApprovals[row.requestReference] = savedApprovals[String(row.requestId)];
         }
-        localStorage.setItem('payflow_merchant_approved_refunds', JSON.stringify(savedApprovals));
+        localStorage.setItem('trustgates_merchant_approved_refunds', JSON.stringify(savedApprovals));
       } catch (e) {}
 
       setActionMessage({
@@ -576,7 +577,7 @@ export default function RefundRequest() {
         });
       }
     } catch (err: any) {
-      console.warn('Backend patch error, updating row locally:', err);
+      console.log('Backend patch error, updating row locally:', err);
       setActionMessage({
         type: 'success',
         text: `Request #${row.requestId} approved for ₹${amountNum.toLocaleString('en-IN')} (Queue triggered).`
@@ -633,7 +634,7 @@ export default function RefundRequest() {
         text: `Request #${row.requestId} rejected with remarks: "${remarks}".`
       });
     } catch (err: any) {
-      console.warn('Backend patch error, updating row locally:', err);
+      console.log('Backend patch error, updating row locally:', err);
       setActionMessage({
         type: 'success',
         text: `Request #${row.requestId} marked as REJECTED (Remarks saved).`
@@ -669,7 +670,7 @@ export default function RefundRequest() {
         text: `Request #${row.requestId} cancelled.`
       });
     } catch (err: any) {
-      console.warn('Backend patch error, updating row locally:', err);
+      console.log('Backend patch error, updating row locally:', err);
       setActionMessage({
         type: 'info',
         text: `Request #${row.requestId} marked as CANCELLED.`
@@ -824,7 +825,7 @@ export default function RefundRequest() {
         });
       }
     } catch (err: any) {
-      console.warn('Status lookup endpoint fallback:', err);
+      console.log('Status lookup endpoint fallback:', err);
       setStatusCheckResult({
         transactionReference: statusCheckTxnRef.trim(),
         status: 'PROCESSED',

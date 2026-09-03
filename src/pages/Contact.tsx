@@ -30,7 +30,7 @@ export default function Contact() {
                     <div><label className="label">Work Email</label><input required type="email" placeholder="you@company.com" className="input" /></div>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div><label className="label">Company</label><input placeholder="Acme Inc." className="input" /></div>
+                    <div><label className="label">Company</label><input placeholder="Trustgates Inc." className="input" /></div>
                     <div><label className="label">Phone</label><input placeholder="+91 90000 00000" className="input" /></div>
                   </div>
                   <div><label className="label">Subject</label>
@@ -46,7 +46,7 @@ export default function Contact() {
           <div className="space-y-4">
             {[
               { icon: MapPin, title: 'Visit Us', lines: ['Prestige Tech Park', 'Marathahalli, Bengaluru 560103, India'] },
-              { icon: Mail, title: 'Email Us', lines: ['hello@payflow.io', 'sales@payflow.io'] },
+              { icon: Mail, title: 'Email Us', lines: ['hello@trustgates.io', 'sales@trustgates.io'] },
               { icon: Phone, title: 'Call Us', lines: ['+91 80 0000 0000', '+1 800 555 0100'] },
               { icon: Clock, title: 'Support Hours', lines: ['24×7 live chat & email', 'Phone: Mon–Fri, 9am–6pm IST'] },
             ].map((c, i) => (

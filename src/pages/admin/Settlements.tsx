@@ -29,7 +29,7 @@ export default function AdminSettlements() {
       // Settlements are distinct from wallets.
       throw new Error('Settlement endpoints are not active in backend.');
     } catch (err: any) {
-      console.error('Failed to load admin settlements:', err);
+      console.log('Failed to load admin settlements:', err);
       setError('Settlement functionality is currently unavailable (Pending Backend API).');
       setSettlements([]);
       setSummary(null);

@@ -190,7 +190,7 @@ export default function MerchantDailyReports() {
 
     } catch (err) {
 
-      console.error(
+      console.log(
         "Fetch Daily Reports Error:",
         err
       );
@@ -343,7 +343,7 @@ export default function MerchantDailyReports() {
 
     } catch (err: any) {
 
-      console.error(
+      console.log(
         `${format} export error:`,
         err
       );

@@ -249,7 +249,7 @@ export default function ForgotPassword() {
       setEmailSent(email);
       setStep(1);
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Forgot Password Error:",
         error
       );
@@ -325,7 +325,7 @@ export default function ForgotPassword() {
           setStep(2);
         }
       } catch (error: unknown) {
-        console.error(
+        console.log(
           "Validate Reset Token Error:",
           error
         );
@@ -459,7 +459,7 @@ export default function ForgotPassword() {
 
       setStep(3);
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Password Reset OTP Error:",
         error
       );
@@ -557,7 +557,7 @@ export default function ForgotPassword() {
 
       setStep(4);
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Verify Password Reset Error:",
         error
       );
@@ -626,7 +626,7 @@ export default function ForgotPassword() {
       setResendCooldown(60);
       setResendSuccess(true);
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Resend Password Reset OTP Error:",
         error
       );

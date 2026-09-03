@@ -52,7 +52,7 @@ export default function MerchantTransactions() {
         setTotalPages(1);
         setTotalRecords(result.length);
       } catch (err) {
-        console.error("Failed to load mock transactions:", err);
+        console.log("Failed to load mock transactions:", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -116,7 +116,7 @@ export default function MerchantTransactions() {
       setTotalPages(result.data?.pagination?.total_pages || 1);
       setTotalRecords(result.data?.pagination?.total_records || 0);
     } catch (err: any) {
-      console.error("Failed to load transactions:", err);
+      console.log("Failed to load transactions:", err);
       setError(true);
     } finally {
       setLoading(false);

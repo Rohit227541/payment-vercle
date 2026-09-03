@@ -122,7 +122,7 @@ export default function Onboarding() {
       await submitKyc(formData);
       navigate("/merchant/dashboard", { replace: true });
     } catch (err) {
-      console.error('KYC submission error:', err);
+      console.log('KYC submission error:', err);
     }
   };
 

@@ -70,7 +70,7 @@ export default function MerchantDashboard() {
         throw new Error('Failed to fetch dashboard data from server.');
       }
     } catch (err: any) {
-      console.error('Merchant Dashboard Loading Error:', err);
+      console.log('Merchant Dashboard Loading Error:', err);
       setError(err?.message || 'Error loading dashboard metrics. Please make sure backend is running.');
     } finally {
       setLoading(false);

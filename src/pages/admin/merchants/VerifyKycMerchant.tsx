@@ -133,7 +133,7 @@ export default function VerifyKycMerchant() {
         setData([]);
       }
     } catch (err) {
-      console.error('Failed to fetch merchants:', err);
+      console.log('Failed to fetch merchants:', err);
       setError(true);
       setData([]);
     } finally {

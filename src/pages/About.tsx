@@ -15,7 +15,7 @@ const values = [
 ];
 
 const milestones = [
-  { year: '2019', title: 'PayFlow founded', desc: 'Started in Bengaluru with a mission to simplify payments.' },
+  { year: '2019', title: 'Trustgates founded', desc: 'Started in Bengaluru with a mission to simplify payments.' },
   { year: '2021', title: '10,000 merchants', desc: 'Crossed 10K merchants and launched subscriptions and payouts.' },
   { year: '2023', title: 'Global expansion', desc: 'Expanded to 150+ countries with multi-currency support.' },
   { year: '2025', title: '50,000+ businesses', desc: 'Now processing 10M+ transactions with 99.99% uptime.' },
@@ -44,7 +44,7 @@ export default function About() {
           <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <span className="eyebrow mb-4">Our Story</span>
             <h2 className="heading">From a small idea to a global payments platform</h2>
-            <p className="subheading">PayFlow started in 2019 with a simple belief: accepting payments online should be easy, secure and accessible to every business — from solo founders to global enterprises.</p>
+            <p className="subheading">Trustgates started in 2019 with a simple belief: accepting payments online should be easy, secure and accessible to every business — from solo founders to global enterprises.</p>
             <p className="mt-4 text-ink-600 dark:text-ink-300">Today, we power payments for 50,000+ businesses across 150+ countries, processing millions of transactions with 99.99% uptime. But we're just getting started.</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="glass-card grid grid-cols-2 gap-6 p-8">

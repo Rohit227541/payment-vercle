@@ -248,7 +248,7 @@ export default function ResetPassword() {
         }
 
       } catch (error: unknown) {
-        console.error(
+        console.log(
           "Validate Reset Token Error:",
           error
         );
@@ -432,7 +432,7 @@ export default function ResetPassword() {
       setStep(2);
 
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Request Password Change Error:",
         error
       );
@@ -557,7 +557,7 @@ export default function ResetPassword() {
       setStep(3);
 
     } catch (error: unknown) {
-      console.error(
+      console.log(
         "Verify Password Reset Error:",
         error
       );
@@ -619,7 +619,7 @@ export default function ResetPassword() {
         setResendSuccess(true);
 
       } catch (error: unknown) {
-        console.error(
+        console.log(
           "Resend OTP Error:",
           error
         );

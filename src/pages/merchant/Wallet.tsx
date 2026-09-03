@@ -56,7 +56,7 @@ export default function MerchantWallet() {
         throw new Error('Failed to load wallet metrics from backend service.');
       }
     } catch (err: any) {
-      console.error('Wallet Loading Error:', err);
+      console.log('Wallet Loading Error:', err);
       setError(err?.message || 'Unable to connect to wallet service.');
     } finally {
       setLoading(false);

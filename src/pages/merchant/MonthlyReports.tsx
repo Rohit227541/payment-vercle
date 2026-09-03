@@ -409,7 +409,7 @@ export default function MonthlyReports() {
 
     } catch (err) {
 
-      console.error(
+      console.log(
         "Monthly Report Error:",
         err
       );
@@ -505,7 +505,7 @@ export default function MonthlyReports() {
 
     } catch (err) {
 
-      console.error(
+      console.log(
         "Export Error:",
         err
       );

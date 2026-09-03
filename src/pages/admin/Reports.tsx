@@ -45,7 +45,7 @@ export default function AdminReports() {
         setData([]);
       }
     } catch (err) {
-      console.error('Failed to load admin reports:', err);
+      console.log('Failed to load admin reports:', err);
       setError(true);
       setData([]);
     } finally {

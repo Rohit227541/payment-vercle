@@ -7,8 +7,8 @@ import CTA from '../components/sections/CTA';
 
 const tiers = [
   { name: 'Referral Partner', desc: 'Refer clients and earn recurring commission.', perk: 'Up to 20% revenue share' },
-  { name: 'Technology Partner', desc: 'Integrate PayFlow into your product or platform.', perk: 'Co-marketing & listing' },
-  { name: 'Reseller Partner', desc: 'Resell PayFlow under your own brand.', perk: 'White-label option' },
+  { name: 'Technology Partner', desc: 'Integrate Trustgates into your product or platform.', perk: 'Co-marketing & listing' },
+  { name: 'Reseller Partner', desc: 'Resell Trustgates under your own brand.', perk: 'White-label option' },
 ];
 
 const benefits = [
@@ -21,7 +21,7 @@ const benefits = [
 export default function Partners() {
   return (
     <>
-      <PageHero eyebrow="Partners" title={<>Grow with the <span className="gradient-text">PayFlow partner program</span></>} subtitle="Join 1,000+ partners earning recurring revenue by bringing PayFlow to their clients." />
+      <PageHero eyebrow="Partners" title={<>Grow with the <span className="gradient-text">Trustgates partner program</span></>} subtitle="Join 1,000+ partners earning recurring revenue by bringing Trustgates to their clients." />
 
       <section className="section">
         <div className="container-px">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Download, RefreshCw, FileText, AlertCircle, Search, DollarSign, CheckCircle2, FileSpreadsheet } from 'lucide-react';
 import { apiFetch } from '../../../services/api.service';
+import { API_BASE_URL2 } from '../../../config';
 
 interface DailySummary {
   date: string;
@@ -37,8 +38,8 @@ export default function DailyReports() {
     setError(null);
     try {
       const summaryRes = await apiFetch(`/admin/report/daily?date=${date}`, {}, true);
-      if (summaryRes.success && summaryRes.data && summaryRes.data.summary) {
-        setSummary(summaryRes.data.summary);
+      if (summaryRes.success && summaryRes.data) {
+        setSummary(summaryRes.data.summary || summaryRes.data);
       } else {
         setSummary(null);
       }
@@ -63,16 +64,34 @@ export default function DailyReports() {
   const handleExport = async (format: string) => {
     setExportLoading(format);
     try {
-      const res = await apiFetch(`/admin/report/daily/export`, {
+      const response = await fetch(`${API_BASE_URL2}/admin/report/daily/export`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('adminToken') || localStorage.getItem('accessToken')}`
+        },
         body: JSON.stringify({ date, format })
-      }, true);
+      });
       
-      if (res.success && res.data?.downloadUrl) {
-        window.open(res.data.downloadUrl, '_blank');
-      } else {
-        alert(res.message || 'Export failed.');
+      if (!response.ok) {
+        alert('Export failed.');
+        return;
       }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Determine file extension
+      let ext = format.toLowerCase();
+      if (ext === 'excel') ext = 'xlsx';
+      
+      link.download = `daily_report_${date}.${ext}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err: any) {
       alert(err.message || 'Export error.');
     } finally {

@@ -85,7 +85,7 @@ export default function AdminRefunds() {
         setRefunds([]);
       }
     } catch (err: any) {
-      console.error('Failed to load admin refunds:', err);
+      console.log('Failed to load admin refunds:', err);
       setRefunds([]);
     } finally {
       setLoading(false);

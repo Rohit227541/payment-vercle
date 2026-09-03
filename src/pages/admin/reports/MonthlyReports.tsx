@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Download, RefreshCw, FileText, AlertCircle, DollarSign, Activity, Users, FileSpreadsheet } from 'lucide-react';
 import { apiFetch } from '../../../services/api.service';
+import { API_BASE_URL2 } from '../../../config';
 
 interface MonthlySummary {
   month: string;
@@ -39,15 +40,19 @@ export default function MonthlyReports() {
       const y = parseInt(yearStr, 10);
 
       const summaryRes = await apiFetch(`/admin/report/monthly?month=${m}&year=${y}`, {}, true);
-      if (summaryRes.success && summaryRes.data && summaryRes.data.summary) {
-        setSummary(summaryRes.data.summary);
+      if (summaryRes.success && summaryRes.data) {
+        setSummary(summaryRes.data.summary || summaryRes.data);
       } else {
         setSummary(null);
       }
 
       const merchantsRes = await apiFetch(`/admin/report/monthly/top-merchants?month=${m}&year=${y}`, {}, true);
       if (merchantsRes.success && merchantsRes.data) {
-        setTopMerchants(Array.isArray(merchantsRes.data) ? merchantsRes.data : []);
+        setTopMerchants(
+          Array.isArray(merchantsRes.data.merchants) ? merchantsRes.data.merchants :
+          (Array.isArray(merchantsRes.data.topMerchants) ? merchantsRes.data.topMerchants :
+          (Array.isArray(merchantsRes.data) ? merchantsRes.data : []))
+        );
       } else {
         setTopMerchants([]);
       }
@@ -69,16 +74,34 @@ export default function MonthlyReports() {
       const m = parseInt(monthStr, 10);
       const y = parseInt(yearStr, 10);
 
-      const res = await apiFetch(`/admin/report/monthly/export`, {
+      const response = await fetch(`${API_BASE_URL2}/admin/report/monthly/export`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('adminToken') || localStorage.getItem('accessToken')}`
+        },
         body: JSON.stringify({ month: m, year: y, format })
-      }, true);
+      });
       
-      if (res.success && res.data?.downloadUrl) {
-        window.open(res.data.downloadUrl, '_blank');
-      } else {
-        alert(res.message || 'Export failed.');
+      if (!response.ok) {
+        alert('Export failed.');
+        return;
       }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Determine file extension
+      let ext = format.toLowerCase();
+      if (ext === 'excel') ext = 'xlsx';
+      
+      link.download = `monthly_report_${m}_${y}.${ext}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err: any) {
       alert(err.message || 'Export error.');
     } finally {
