@@ -70,20 +70,29 @@ export default function MerchantReports() {
         body: JSON.stringify({ merchantId: searchTrigger, startDate, endDate })
       });
       
-      if (!response.ok) {
-        alert('Export failed.');
+      const responseData = await response.json();
+      
+      if (!response.ok || !responseData.success) {
+        alert(`Export failed: ${responseData.message || 'Server returned an error'}`);
         return;
       }
       
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `merchant_report_${searchTrigger}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      if (responseData.data && responseData.data.downloadPath) {
+          let downloadUrl = responseData.data.downloadPath;
+          if (downloadUrl.startsWith('/')) {
+              downloadUrl = `${API_BASE_URL2}${downloadUrl}`;
+          }
+          
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = responseData.data.fileName || `merchant_report_${searchTrigger}.csv`;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      } else {
+          alert('Export failed: No download path provided by the server.');
+      }
     } catch (err: any) {
       alert(err.message || 'Export error.');
     } finally {

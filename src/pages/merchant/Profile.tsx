@@ -26,6 +26,7 @@ interface ProfileDetails {
   kycStatus: string;
   businessType: string;
   panNumber: string;
+  aadharNumber?: string;
   address: {
     line1: string;
     city: string;
@@ -72,6 +73,9 @@ export default function MerchantProfile() {
       if (storedKycStatus) {
         result.kycStatus = storedKycStatus;
       }
+      
+      // Ensure we have an Aadhar number to display
+      result.aadharNumber = storedMerchant?.aadharNumber || result.aadharNumber || 'XXXX-XXXX-8921';
 
       // Simulate a small delay for the animation
       setTimeout(() => {
@@ -219,10 +223,10 @@ export default function MerchantProfile() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         
         {/* Left Column - Business Info */}
-        <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
+        <motion.div variants={itemVariants} className="space-y-6">
           <div className="bg-white dark:bg-ink-950 rounded-2xl border border-ink-200/60 dark:border-ink-800/60 shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-ink-100 dark:border-ink-800/60 bg-ink-50/50 dark:bg-ink-900/20 flex items-center gap-3">
               <div className="p-2 bg-purple-100 dark:bg-purple-500/20 rounded-lg">
@@ -284,6 +288,23 @@ export default function MerchantProfile() {
                 </div>
 
                 <div className="group">
+                  <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">Aadhar Number</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <User className="h-4 w-4 text-ink-400" />
+                    </div>
+                    <input 
+                      type="text" 
+                      value={data.aadharNumber} 
+                      readOnly 
+                      className="w-full pl-11 pr-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none transition-colors group-hover:border-ink-300 dark:group-hover:border-ink-700"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div className="group">
                   <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">Contact Phone</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -301,60 +322,7 @@ export default function MerchantProfile() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-ink-950 rounded-2xl border border-ink-200/60 dark:border-ink-800/60 shadow-sm overflow-hidden">
-            <div className="px-6 py-5 border-b border-ink-100 dark:border-ink-800/60 bg-ink-50/50 dark:bg-ink-900/20 flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg">
-                <Landmark className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <h3 className="font-display font-semibold text-ink-900 dark:text-white text-lg">Bank Details</h3>
-                <p className="text-xs text-ink-500">Settlement account information</p>
-              </div>
-            </div>
-            <div className="p-6 grid sm:grid-cols-2 gap-5">
-              <div className="group sm:col-span-2">
-                <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">Beneficiary Name</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User className="h-4 w-4 text-ink-400" />
-                  </div>
-                  <input 
-                    type="text" 
-                    value={data.bankDetails.accountName} 
-                    readOnly 
-                    className="w-full pl-11 pr-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none transition-colors group-hover:border-ink-300 dark:group-hover:border-ink-700"
-                  />
-                </div>
-              </div>
-              <div className="group">
-                <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">Bank Name</label>
-                <input 
-                  type="text" 
-                  value={data.bankDetails.bankName} 
-                  readOnly 
-                  className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none transition-colors group-hover:border-ink-300 dark:group-hover:border-ink-700"
-                />
-              </div>
-              <div className="group">
-                <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">Account Number</label>
-                <input 
-                  type="text" 
-                  value={data.bankDetails.accountNumber} 
-                  readOnly 
-                  className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-mono font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none transition-colors group-hover:border-ink-300 dark:group-hover:border-ink-700"
-                />
-              </div>
-              <div className="group">
-                <label className="text-[11px] font-bold text-ink-500 uppercase tracking-widest mb-1.5 block">IFSC Code</label>
-                <input 
-                  type="text" 
-                  value={data.bankDetails.ifsc} 
-                  readOnly 
-                  className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-mono font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none transition-colors group-hover:border-ink-300 dark:group-hover:border-ink-700"
-                />
-              </div>
-            </div>
-          </div>
+
 
         </motion.div>
 
@@ -386,65 +354,7 @@ export default function MerchantProfile() {
                 </div>
               </div>
 
-              <div className="h-px w-full bg-ink-200 dark:bg-ink-800/60" />
 
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <MapPin className="h-5 w-5 text-ink-500" />
-                  <h4 className="font-semibold text-ink-900 dark:text-white text-sm">Registered Address</h4>
-                </div>
-                <div className="space-y-3">
-                  <div className="group">
-                    <input 
-                      type="text" 
-                      value={data.address.line1} 
-                      readOnly 
-                      className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <input 
-                      type="text" 
-                      value={data.address.city} 
-                      readOnly 
-                      className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none"
-                    />
-                    <input 
-                      type="text" 
-                      value={data.address.state} 
-                      readOnly 
-                      className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-                  <div className="group">
-                    <input 
-                      type="text" 
-                      value={data.address.pincode} 
-                      readOnly 
-                      className="w-full px-4 py-3 bg-ink-50/80 dark:bg-ink-900/40 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium text-ink-900 dark:text-white cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative overflow-hidden rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 p-5 mt-4">
-                <div className="absolute -right-4 -top-4">
-                  <AlertCircle className="h-24 w-24 text-amber-500/10" />
-                </div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
-                    <h4 className="font-semibold text-amber-900 dark:text-amber-400 text-sm">Updates Restricted</h4>
-                  </div>
-                  <p className="text-xs text-amber-800/80 dark:text-amber-500/80 leading-relaxed">
-                    For compliance reasons, updating business information requires re-KYC. Please contact support to initiate this process.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-500 bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20">
-                    <Clock className="h-3.5 w-3.5" /> Contact support to update
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </motion.div>

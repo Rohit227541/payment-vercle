@@ -83,25 +83,29 @@ export default function MonthlyReports() {
         body: JSON.stringify({ month: m, year: y, format })
       });
       
-      if (!response.ok) {
-        alert('Export failed.');
+      const responseData = await response.json();
+      
+      if (!response.ok || !responseData.success) {
+        alert(`Export failed: ${responseData.message || 'Server returned an error'}`);
         return;
       }
       
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Determine file extension
-      let ext = format.toLowerCase();
-      if (ext === 'excel') ext = 'xlsx';
-      
-      link.download = `monthly_report_${m}_${y}.${ext}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      if (responseData.data && responseData.data.downloadPath) {
+          let downloadUrl = responseData.data.downloadPath;
+          if (downloadUrl.startsWith('/')) {
+              downloadUrl = `${API_BASE_URL2}${downloadUrl}`;
+          }
+          
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = responseData.data.fileName || `monthly_report_${m}_${y}.${format.toLowerCase()}`;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      } else {
+          alert('Export failed: No download path provided by the server.');
+      }
     } catch (err: any) {
       alert(err.message || 'Export error.');
     } finally {

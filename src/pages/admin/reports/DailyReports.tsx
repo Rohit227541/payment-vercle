@@ -63,38 +63,85 @@ export default function DailyReports() {
 
   const handleExport = async (format: string) => {
     setExportLoading(format);
+
     try {
-      const response = await fetch(`${API_BASE_URL2}/admin/report/daily/export`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('adminToken') || localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify({ date, format })
-      });
-      
-      if (!response.ok) {
-        alert('Export failed.');
-        return;
+      const response = await fetch(
+        `${API_BASE_URL2}/admin/report/daily/export`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("adminToken") ||
+              localStorage.getItem("accessToken")
+              }`,
+          },
+          body: JSON.stringify({
+            date,
+            format,
+          }),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok || !responseData.success) {
+        throw new Error(
+          responseData.message ||
+          "Failed to export daily report."
+        );
       }
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Determine file extension
-      let ext = format.toLowerCase();
-      if (ext === 'excel') ext = 'xlsx';
-      
-      link.download = `daily_report_${date}.${ext}`;
+
+      const downloadPath =
+        responseData?.data?.downloadPath;
+
+      if (!downloadPath) {
+        throw new Error(
+          "Download file path not found."
+        );
+      }
+
+      /*
+       * Backend ka downloadPath:
+       *
+       * /uploads/reports/csv/filename.csv
+       *
+       * /uploads/reports/excel/filename.xlsx
+       *
+       * Isko API domain ke saath combine karenge.
+       */
+      const downloadUrl =
+        `${API_BASE_URL2}${downloadPath}`;
+
+      /*
+       * Browser ko actual file URL par bhejo
+       */
+      const link =
+        document.createElement("a");
+
+      link.href = downloadUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
       document.body.appendChild(link);
+
       link.click();
+
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err: any) {
-      alert(err.message || 'Export error.');
+
+    } catch (error: any) {
+
+      console.error(
+        "Daily Report Export Error:",
+        error
+      );
+
+      alert(
+        error?.message ||
+        "Failed to export daily report."
+      );
+
     } finally {
+
       setExportLoading(null);
     }
   };
@@ -109,35 +156,35 @@ export default function DailyReports() {
         <div className="flex items-center gap-3">
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
-            <input 
+            <input
               type="date"
               value={date}
               onChange={(e) => { setDate(e.target.value); setPage(1); }}
               className="pl-10 pr-4 py-2 bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-purple-500/50"
             />
           </div>
-          <button 
+          <button
             onClick={fetchDailyReport}
             className="p-2.5 bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl hover:bg-ink-50 dark:hover:bg-ink-800 transition"
             title="Refresh Data"
           >
             <RefreshCw className={`h-4 w-4 text-ink-600 dark:text-ink-300 ${loading ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => handleExport('CSV')}
             disabled={exportLoading !== null}
             className="bg-white hover:bg-ink-50 dark:bg-ink-900 dark:hover:bg-ink-800 text-ink-700 dark:text-ink-300 border border-ink-200 dark:border-ink-800 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-medium transition disabled:opacity-50"
           >
             {exportLoading === 'CSV' ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />} CSV
           </button>
-          <button 
+          <button
             onClick={() => handleExport('EXCEL')}
             disabled={exportLoading !== null}
             className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-medium transition disabled:opacity-50"
           >
             {exportLoading === 'EXCEL' ? <RefreshCw className="h-4 w-4 animate-spin" /> : <FileSpreadsheet className="h-4 w-4" />} Excel
           </button>
-          <button 
+          <button
             onClick={() => handleExport('PDF')}
             disabled={exportLoading !== null}
             className="bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-medium transition disabled:opacity-50"
@@ -214,11 +261,10 @@ export default function DailyReports() {
                       {t.paymentMethod}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
-                        t.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-600' :
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${t.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-600' :
                         t.status === 'FAILED' ? 'bg-rose-500/10 text-rose-600' :
-                        'bg-amber-500/10 text-amber-600'
-                      }`}>
+                          'bg-amber-500/10 text-amber-600'
+                        }`}>
                         {t.status}
                       </span>
                     </td>
@@ -237,7 +283,7 @@ export default function DailyReports() {
             </tbody>
           </table>
         </div>
-        
+
         {/* Simple Pagination */}
         {transactions.length >= 50 && (
           <div className="p-4 border-t border-ink-200 dark:border-ink-800 flex justify-end">
