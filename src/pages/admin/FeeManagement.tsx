@@ -43,15 +43,25 @@ export default function FeeManagement() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [feeRes, merchRes] = await Promise.all([
-        apiFetch('https://api.trustgates.co.in/admin/fee-management?limit=100', {}, true),
-        apiFetch('https://api.trustgates.co.in/admin/merchant/get-merchant?limit=100', {}, true)
-      ]);
+      const feeRes = await apiFetch('https://api.trustgates.co.in/admin/fee-management?limit=10000', {}, true);
+      
+      let fetchedMerchants: any[] = [];
+      let fetchPage = 1;
+      let fetchTotalPages = 1;
 
-      if (merchRes?.success && merchRes?.data) {
-        const mData = Array.isArray(merchRes.data) ? merchRes.data : (merchRes.data.data || []);
-        setAllMerchants(mData);
-      }
+      do {
+        const merchRes = await apiFetch(`https://api.trustgates.co.in/admin/merchant/get-merchant?limit=100&page=${fetchPage}`, {}, true);
+        if (merchRes?.success && merchRes?.data) {
+          const mData = Array.isArray(merchRes.data) ? merchRes.data : (merchRes.data.data || []);
+          fetchedMerchants = [...fetchedMerchants, ...mData];
+          fetchTotalPages = merchRes.pagination?.totalPages || (merchRes.data.pagination?.totalPages) || 1;
+          fetchPage++;
+        } else {
+          break;
+        }
+      } while (fetchPage <= fetchTotalPages);
+
+      setAllMerchants(fetchedMerchants);
 
       if (feeRes?.success && feeRes?.data) {
         const feeData = Array.isArray(feeRes.data) ? feeRes.data : (feeRes.data.data || []);
